@@ -1,9 +1,9 @@
 class Tree:
-    __value = int
+    __value = float
     __left: any  # Tree | None
     __right: any  # Tree | None
 
-    def __init__(self, value: int = 0, left=None, right=None):
+    def __init__(self, value: float = 0, left=None, right=None):
         self.__value = value
         self.__left = left
         self.__right = right
@@ -28,5 +28,21 @@ class Tree:
 
 
 if __name__ == '__main__':
-    tree = Tree(1, Tree(2, Tree(4), Tree(5)), Tree(3, Tree(6), Tree(7)))
-    print(tree)
+    my_dict: dict = {
+        "A": 0.10,
+        "B": 0.15,
+        "C": 0.30,
+        "D": 0.16,
+        "E": 0.29,
+    }
+
+    # ordenar diccionario
+    my_dict = dict(sorted(my_dict.items(), key=lambda item: item[1]))
+    print(my_dict)
+    right_value = my_dict.popitem()
+    left_value = my_dict.popitem()
+    print(right_value)
+    print(left_value)
+
+    # tree = Tree(1, Tree(2, Tree(4), Tree(5)), Tree(3, Tree(6), Tree(7)))
+    # print(tree)
