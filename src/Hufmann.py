@@ -57,10 +57,11 @@ class Encode:
         self.codes = []
 
     def add_code(self, code: Code):
-        if 0 == len(self.codes) or 8 < self.codes[-1].length + code.length:
-            self.codes.append(code)
+        if 0 == len(self.codes) or 8 == self.codes[0].length:
+            self.codes.insert(0, code)
         else:
-            self.codes[-1] = self.codes[-1].concat(code)
+            if 8 > self.codes[0].length + code.length:
+                self.codes[0] = self.codes[0].concat_init(code)
 
 
 class Huffman:
@@ -137,9 +138,9 @@ class Huffman:
 
     def decode(self, code: Code) -> str:
         self.generate_tree()
-        decoded_text = ''
+        decoded_text: str = ''
         current_node: Tree = self.tree
-        current_code = code.code
+        current_code: int = code.code
         for _ in range(code.length):
             if current_code & 1:
                 current_node = current_node.right
@@ -162,7 +163,7 @@ def test_huffman():
     code2 = Code.get_code_from_string('101')
     print(f'code2: {code2} Base10: {code2.code}')
 
-    my_frequency_dict: dict = {
+    my_frequency_dict: dict[str, float] = {
         "A": 0.10,
         "B": 0.15,
         "C": 0.30,
