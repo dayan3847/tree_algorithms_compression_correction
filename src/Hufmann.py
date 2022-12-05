@@ -1,3 +1,5 @@
+from typing import List
+
 from src.Tree import Tree, TreeObject
 
 
@@ -46,6 +48,19 @@ class Code:
         code = int(string_code, 2)
         length = len(string_code)
         return Code(code, length)
+
+
+class Encode:
+    codes: List[Code]
+
+    def __init__(self):
+        self.codes = []
+
+    def add_code(self, code: Code):
+        if 0 == len(self.codes) or 8 < self.codes[-1].length + code.length:
+            self.codes.append(code)
+        else:
+            self.codes[-1] = self.codes[-1].concat(code)
 
 
 class Huffman:
