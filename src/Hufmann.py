@@ -32,7 +32,7 @@ class Code:
         return Code(self.code, self.length + 1)
 
     def concat_one_init(self) -> 'Code':
-        new_code_code = 1 << self.code.bit_length() | self.code
+        new_code_code = 1 << self.length | self.code
         return Code(new_code_code, self.length + 1)
 
     def concat(self, other: 'Code') -> 'Code':
@@ -119,25 +119,29 @@ class Huffman:
             return
 
         if tree.left is not None:
-            self.__generate_code_recursive(tree.left, code.concat_zero())
+            self.__generate_code_recursive(tree.left, code.concat_zero_init())
+            # self.__generate_code_recursive(tree.left, code.concat_zero())
 
         if tree.right is not None:
-            self.__generate_code_recursive(tree.right, code.concat_one())
+            self.__generate_code_recursive(tree.right, code.concat_one_init())
+            # self.__generate_code_recursive(tree.right, code.concat_one())
 
     def encode(self, text: str) -> Code:
         self.generate_code()
         encoded: Code = Code()
         for i in text:
             new_code: Code = self.code_dict[i]
-            encoded = encoded.concat(new_code)
+            encoded = encoded.concat_init(new_code)
+            # encoded = encoded.concat(new_code)
         return encoded
 
     def decode(self, code: Code) -> str:
         self.generate_tree()
         decoded_text = ''
         current_node: Tree = self.tree
-        for i in range(code.length):
-            if code.code >> (code.length - 1 - i) & 1:
+        current_code = code.code
+        for _ in range(code.length):
+            if current_code & 1:
                 current_node = current_node.right
             else:
                 current_node = current_node.left
@@ -145,6 +149,8 @@ class Huffman:
             if current_node.left is None and current_node.right is None:
                 decoded_text += current_node.data.name
                 current_node = self.tree
+
+            current_code >>= 1
 
         return decoded_text
 

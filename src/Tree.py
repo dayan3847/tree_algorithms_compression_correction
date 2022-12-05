@@ -74,7 +74,7 @@ class Tree:
 
 
 def test_tree():
-    tree = Tree(TreeObject('a', 5), Tree(TreeObject('b', 2)), Tree(TreeObject('c', 7)))
+    tree = Tree(TreeObject('c', 5), Tree(TreeObject('b', 2), Tree(TreeObject('a', 1))), Tree(TreeObject('d', 7)))
     print(tree)
 
 
