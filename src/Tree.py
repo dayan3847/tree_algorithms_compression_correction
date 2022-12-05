@@ -1,48 +1,82 @@
-class Tree:
-    __value = float
-    __left: any  # Tree | None
-    __right: any  # Tree | None
+class TreeObject:
+    name = str
+    value = float
 
-    def __init__(self, value: float = 0, left=None, right=None):
-        self.__value = value
-        self.__left = left
-        self.__right = right
+    def __init__(self, name: str = '', value: float = 0):
+        self.name = name
+        self.value = value
+
+    def __gt__(self, other: 'TreeObject'):
+        return self.value > other.value
+
+    def __lt__(self, other: 'TreeObject'):
+        return self.value < other.value
+
+    def __eq__(self, other: 'TreeObject'):
+        return self.value == other.value
+
+    def __ge__(self, other: 'TreeObject'):
+        return self.value >= other.value
+
+    def __le__(self, other: 'TreeObject'):
+        return self.value <= other.value
+
+    def __ne__(self, other: 'TreeObject'):
+        return self.value != other.value
+
+
+class Tree:
+    data: TreeObject
+    left: 'Tree'
+    right: 'Tree'
+
+    def __init__(self, data: TreeObject, left: 'Tree' = None, right: 'Tree' = None):
+        self.data = data
+        self.left = left
+        self.right = right
 
     def __str__(self) -> str:
         tree_str = '{'
+        tree_str += f'"name":"{self.data.name}"'
+        tree_str += f',"value":"{str(self.data.value)}"'
         # left
-        tree_str += '"left":'
-        if self.__left is not None:
-            tree_str += str(self.__left)
+        tree_str += ',"left":'
+        if self.left is not None:
+            tree_str += str(self.left)
         else:
             tree_str += '"None"'
-        tree_str += f',"value":"{str(self.__value)}"'
         # right
         tree_str += ',"right":'
-        if self.__right is not None:
-            tree_str += str(self.__right)
+        if self.right is not None:
+            tree_str += str(self.right)
         else:
             tree_str += '"None"'
         tree_str += '}'
         return tree_str
 
+    def __gt__(self, other: 'Tree'):
+        return self.data > other.data
+
+    def __lt__(self, other: 'Tree'):
+        return self.data < other.data
+
+    def __eq__(self, other: 'Tree'):
+        return self.data == other.data
+
+    def __ge__(self, other: 'Tree'):
+        return self.data >= other.data
+
+    def __le__(self, other: 'Tree'):
+        return self.data <= other.data
+
+    def __ne__(self, other: 'Tree'):
+        return self.data != other.data
+
+
+def test_tree():
+    tree = Tree(TreeObject('a', 5), Tree(TreeObject('b', 2)), Tree(TreeObject('c', 7)))
+    print(tree)
+
 
 if __name__ == '__main__':
-    my_dict: dict = {
-        "A": 0.10,
-        "B": 0.15,
-        "C": 0.30,
-        "D": 0.16,
-        "E": 0.29,
-    }
-
-    # ordenar diccionario
-    my_dict = dict(sorted(my_dict.items(), key=lambda item: item[1]))
-    print(my_dict)
-    right_value = my_dict.popitem()
-    left_value = my_dict.popitem()
-    print(right_value)
-    print(left_value)
-
-    # tree = Tree(1, Tree(2, Tree(4), Tree(5)), Tree(3, Tree(6), Tree(7)))
-    # print(tree)
+    test_tree()
