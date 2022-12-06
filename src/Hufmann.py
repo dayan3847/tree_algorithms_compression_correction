@@ -110,6 +110,7 @@ class Huffman:
         return self.tree
 
     def generate_code(self) -> dict[str, Code]:
+        self.generate_tree()
         if 0 == len(self.code_dict):
             self.__generate_code_recursive(self.tree, Code())
         return self.code_dict
@@ -173,7 +174,7 @@ def test_huffman():
 
     huffman = Huffman(my_frequency_dict)
 
-    tree = huffman.generate_tree()
+    tree: Tree = huffman.generate_tree()
     print('Tree:')
     print(tree)
 
@@ -186,7 +187,7 @@ def test_huffman():
     text = 'ACABADA'
     encoded = huffman.encode(text)
     encoded_string = str(encoded)
-    print(f'Encoded "{text}": {encoded_string}, Base10: {encoded.code}')
+    print(f'Encoded "{text}": {encoded_string}, Base10: {encoded.code}, Length: {encoded.length}')
 
     decoded_text = huffman.decode(encoded)
     print(f'Decoded "{encoded_string}": {decoded_text}')
