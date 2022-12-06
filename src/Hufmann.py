@@ -57,10 +57,11 @@ class Encode:
         self.codes = []
 
     def add_code(self, code: Code):
-        if 0 == len(self.codes) or 8 < self.codes[-1].length + code.length:
-            self.codes.append(code)
+        if 0 == len(self.codes) or 8 == self.codes[0].length:
+            self.codes.insert(0, code)
         else:
-            self.codes[-1] = self.codes[-1].concat(code)
+            if 8 > self.codes[0].length + code.length:
+                self.codes[0] = self.codes[0].concat_init(code)
 
 
 class Huffman:
@@ -109,6 +110,7 @@ class Huffman:
         return self.tree
 
     def generate_code(self) -> dict[str, Code]:
+        self.generate_tree()
         if 0 == len(self.code_dict):
             self.__generate_code_recursive(self.tree, Code())
         return self.code_dict
@@ -137,9 +139,9 @@ class Huffman:
 
     def decode(self, code: Code) -> str:
         self.generate_tree()
-        decoded_text = ''
+        decoded_text: str = ''
         current_node: Tree = self.tree
-        current_code = code.code
+        current_code: int = code.code
         for _ in range(code.length):
             if current_code & 1:
                 current_node = current_node.right
@@ -162,7 +164,7 @@ def test_huffman():
     code2 = Code.get_code_from_string('101')
     print(f'code2: {code2} Base10: {code2.code}')
 
-    my_frequency_dict: dict = {
+    my_frequency_dict: dict[str, float] = {
         "A": 0.10,
         "B": 0.15,
         "C": 0.30,
@@ -172,7 +174,7 @@ def test_huffman():
 
     huffman = Huffman(my_frequency_dict)
 
-    tree = huffman.generate_tree()
+    tree: Tree = huffman.generate_tree()
     print('Tree:')
     print(tree)
 
@@ -185,7 +187,7 @@ def test_huffman():
     text = 'ACABADA'
     encoded = huffman.encode(text)
     encoded_string = str(encoded)
-    print(f'Encoded "{text}": {encoded_string}, Base10: {encoded.code}')
+    print(f'Encoded "{text}": {encoded_string}, Base10: {encoded.code}, Length: {encoded.length}')
 
     decoded_text = huffman.decode(encoded)
     print(f'Decoded "{encoded_string}": {decoded_text}')
