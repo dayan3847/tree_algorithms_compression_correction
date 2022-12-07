@@ -37,7 +37,7 @@ class Huffman:
             verbose and print(f'Right: {right_node.data.name} ({right_node.data.value})')
 
             new_tree_name: str = ''.join(sorted(f'{left_index}{right_index}'))
-            new_tree_value: float = float(round(left_node.data.value + right_node.data.value, 2))
+            new_tree_value: float = float(left_node.data.value) + float(right_node.data.value)
             new_tree = Tree(TreeObject(new_tree_name, new_tree_value), left_node, right_node)
             my_dict_tree[new_tree.data.name] = new_tree
 
