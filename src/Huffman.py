@@ -118,7 +118,7 @@ class Huffman:
         self.tree = None
         self.code_dict = {}
 
-    def generate_tree(self) -> Tree:
+    def generate_tree(self, verbose: bool = False) -> Tree:
         if self.tree is not None:
             return self.tree
 
@@ -128,17 +128,18 @@ class Huffman:
 
         step: int = 1
         while 1 < len(my_dict_tree):
-            print(f'Step {step}')
-            for i in my_dict_tree:
-                print(my_dict_tree[i])
+            if verbose:
+                print(f'Step {step}')
+                for i in my_dict_tree:
+                    print(my_dict_tree[i])
 
             left_index: str = min(my_dict_tree, key=my_dict_tree.get)
             left_node: Tree = my_dict_tree.pop(left_index)
-            print(f'Left: {left_node.data.name} ({left_node.data.value})')
+            verbose and print(f'Left: {left_node.data.name} ({left_node.data.value})')
 
             right_index: str = min(my_dict_tree, key=my_dict_tree.get)
             right_node: Tree = my_dict_tree.pop(right_index)
-            print(f'Right: {right_node.data.name} ({right_node.data.value})')
+            verbose and print(f'Right: {right_node.data.name} ({right_node.data.value})')
 
             new_tree_name: str = ''.join(sorted(f'{left_index}{right_index}'))
             new_tree_value: float = float(round(left_node.data.value + right_node.data.value, 2))
@@ -164,11 +165,9 @@ class Huffman:
 
         if tree.left is not None:
             self.__generate_code_recursive(tree.left, code.concat_zero_init())
-            # self.__generate_code_recursive(tree.left, code.concat_zero())
 
         if tree.right is not None:
             self.__generate_code_recursive(tree.right, code.concat_one_init())
-            # self.__generate_code_recursive(tree.right, code.concat_one())
 
     def encode(self, text: str) -> Encode:
         self.generate_code()
@@ -184,7 +183,7 @@ class Huffman:
         self.generate_tree()
         decoded_text: str = ''
         current_node: Tree = self.tree
-        for code in encode.codes:
+        for code in reversed(encode.codes):
             current_code: int = code.code
             for _ in range(code.length):
                 if current_code & 1:
