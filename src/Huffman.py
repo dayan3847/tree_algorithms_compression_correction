@@ -14,6 +14,29 @@ class Code:
         else:
             self.length = length
 
+    # clone code
+    def clone(self) -> 'Code':
+        return Code(self.code, self.length)
+
+    # extract the 'length' least significant bits
+    def extract(self, length: int) -> 'Code':
+        if length >= self.length:
+            result = self.clone()
+            self.code = 0
+            self.length = 0
+            return result
+
+        # create a new code with the last length bits
+        extra = 1
+        for _ in range(length - 1):
+            extra <<= 1
+            extra |= 1
+
+        result = Code(self.code & extra, length)
+        self.code = self.code >> length
+        self.length -= length
+        return result
+
     def __str__(self):
         result = f'{self.code:b}'
         if len(result) < self.length:
@@ -35,13 +58,19 @@ class Code:
         new_code_code = 1 << self.length | self.code
         return Code(new_code_code, self.length + 1)
 
-    def concat(self, other: 'Code') -> 'Code':
-        new_code_code = self.code << other.length | other.code
-        return Code(new_code_code, self.length + other.length)
+    # def concat(self, other: 'Code') -> 'Code':
+    #     new_code_code = self.code << other.length | other.code
+    #     return Code(new_code_code, self.length + other.length)
 
     def concat_init(self, other: 'Code') -> 'Code':
         new_code_code = other.code << self.length | self.code
-        return Code(new_code_code, self.length + other.length)
+        self.code = new_code_code
+        self.length += other.length
+        return self
+
+    # def concat_init(self, other: 'Code') -> 'Code':
+    #     new_code_code = other.code << self.length | self.code
+    #     return Code(new_code_code, self.length + other.length)
 
     @staticmethod
     def get_code_from_string(string_code: str):
@@ -56,12 +85,25 @@ class Encode:
     def __init__(self):
         self.codes = []
 
-    def add_code(self, code: Code):
+    def add_code(self, code: Code) -> None:
+        code_cloned = code.clone()
+        if 0 == code_cloned.length:
+            return
         if 0 == len(self.codes) or 8 == self.codes[0].length:
-            self.codes.insert(0, code)
-        else:
-            if 8 > self.codes[0].length + code.length:
-                self.codes[0] = self.codes[0].concat_init(code)
+            first_part: Code = code_cloned.extract(8)
+            self.codes.insert(0, first_part)
+            return self.add_code(code_cloned)
+
+        rest: int = 8 - self.codes[0].length
+        first_part: Code = code_cloned.extract(rest)
+        self.codes[0].concat_init(first_part)
+        self.add_code(code_cloned)
+
+    def __str__(self):
+        result = ''
+        for code in self.codes:
+            result += str(code)
+        return result
 
 
 class Huffman:
@@ -128,16 +170,46 @@ class Huffman:
             self.__generate_code_recursive(tree.right, code.concat_one_init())
             # self.__generate_code_recursive(tree.right, code.concat_one())
 
-    def encode(self, text: str) -> Code:
+    def encode(self, text: str) -> Encode:
+        self.generate_code()
+
+        encoded: Encode = Encode()
+
+        for i in text:
+            new_code: Code = self.code_dict[i]
+            encoded.add_code(new_code)
+        return encoded
+
+    def decode(self, encode: Encode) -> str:
+        self.generate_tree()
+        decoded_text: str = ''
+        current_node: Tree = self.tree
+        for code in encode.codes:
+            current_code: int = code.code
+            for _ in range(code.length):
+                if current_code & 1:
+                    current_node = current_node.right
+                else:
+                    current_node = current_node.left
+
+                if current_node.left is None and current_node.right is None:
+                    decoded_text += current_node.data.name
+                    current_node = self.tree
+
+                current_code >>= 1
+
+        return decoded_text
+
+    def encode_one_code(self, text: str) -> Code:
         self.generate_code()
         encoded: Code = Code()
         for i in text:
             new_code: Code = self.code_dict[i]
-            encoded = encoded.concat_init(new_code)
+            encoded.concat_init(new_code)
             # encoded = encoded.concat(new_code)
         return encoded
 
-    def decode(self, code: Code) -> str:
+    def decode_one_code(self, code: Code) -> str:
         self.generate_tree()
         decoded_text: str = ''
         current_node: Tree = self.tree
@@ -157,13 +229,18 @@ class Huffman:
         return decoded_text
 
 
-def test_huffman():
+def test_huffman1():
     code = Code(0, 3)
-    print(f'code: {code} Base10: {code.code}')
+    print(f'code: {code} Base10: {code.code} Length: {code.length}')
+
+    code2 = code.extract(1)
+    print(f'code2: {code2} Base10: {code2.code} Length: {code2.length}')
 
     code2 = Code.get_code_from_string('101')
     print(f'code2: {code2} Base10: {code2.code}')
 
+
+def test_huffman2():
     my_frequency_dict: dict[str, float] = {
         "A": 0.10,
         "B": 0.15,
@@ -172,26 +249,36 @@ def test_huffman():
         "E": 0.29,
     }
 
-    huffman = Huffman(my_frequency_dict)
+    huffman: Huffman = Huffman(my_frequency_dict)
 
     tree: Tree = huffman.generate_tree()
     print('Tree:')
     print(tree)
 
-    code_dict = huffman.generate_code()
+    code_dict: dict[str, Code] = huffman.generate_code()
     print('Codes:')
     for i in code_dict:
         print(f'{i}: {code_dict[i]}')
 
     # text = 'B'
-    text = 'ACABADA'
-    encoded = huffman.encode(text)
-    encoded_string = str(encoded)
-    print(f'Encoded "{text}": {encoded_string}, Base10: {encoded.code}, Length: {encoded.length}')
+    text: str = 'ACABADA'
+    encoded: Encode = huffman.encode(text)
+    encoded_string: str = str(encoded)
+    print(f'Encoded "{text}": {encoded_string}')
+    for code in encoded.codes:
+        print(f'Base10: {code.code}, Length: {code.length}')
 
-    decoded_text = huffman.decode(encoded)
+    decoded_text: str = huffman.decode(encoded)
     print(f'Decoded "{encoded_string}": {decoded_text}')
+
+    encoded2: Code = huffman.encode_one_code(text)
+    encoded_string2: str = str(encoded2)
+    print(f'Encoded2 "{text}": {encoded_string2}, Base10: {encoded2.code}, Length: {encoded2.length}')
+
+    decoded_text2: str = huffman.decode_one_code(encoded2)
+    print(f'Decoded "{encoded_string2}": {decoded_text2}')
 
 
 if __name__ == '__main__':
-    test_huffman()
+    # test_huffman1()
+    test_huffman2()
