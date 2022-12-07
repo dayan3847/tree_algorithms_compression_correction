@@ -1,0 +1,46 @@
+{
+  "name": "c",
+  "value": "6",
+  "left": {
+    "name": "b",
+    "value": "3",
+    "left": {
+      "name": "g",
+      "value": "2",
+      "left": "None",
+      "right": "None"
+    },
+    "right": {
+      "name": "e",
+      "value": "4",
+      "left": "None",
+      "right": {
+        "name": "f",
+        "value": "5",
+        "left": "None",
+        "right": "None"
+      }
+    }
+  },
+  "right": {
+    "name": "d",
+    "value": "7",
+    "left": "None",
+    "right": {
+      "name": "h",
+      "value": "9",
+      "left": {
+        "name": "i",
+        "value": "8",
+        "left": "None",
+        "right": "None"
+      },
+      "right": {
+        "name": "j",
+        "value": "10",
+        "left": "None",
+        "right": "None"
+      }
+    }
+  }
+}

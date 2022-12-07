@@ -1,5 +1,6 @@
 from pyswip import Prolog
 
+
 class TreeObject:
     name = str
     value = float
@@ -31,11 +32,13 @@ class Tree:
     data: TreeObject
     left: 'Tree'
     right: 'Tree'
+    parent: 'Tree'
 
-    def __init__(self, data: TreeObject, left: 'Tree' = None, right: 'Tree' = None):
+    def __init__(self, data: TreeObject, left: 'Tree' = None, right: 'Tree' = None, parent: 'Tree' = None):
         self.data = data
         self.left = left
         self.right = right
+        self.parent = parent
 
     def __str__(self) -> str:
         tree_str = '{'
@@ -74,9 +77,166 @@ class Tree:
     def __ne__(self, other: 'Tree'):
         return self.data != other.data
 
+    def add_new_vertex(self, new_vertex: 'Tree', tree: 'Tree'):
+        if new_vertex <= tree:
+            if not tree.left:
+                tree.left = new_vertex
+                new_vertex.parent = tree
+                return
+            else:
+                self.add_new_vertex(new_vertex, tree.left)
+        else:
+            if not tree.right:
+                tree.right = new_vertex
+                new_vertex.parent = tree
+                return
+            else:
+                self.add_new_vertex(new_vertex, tree.right)
+
+    def in_order_tour(self, tree: 'Tree'):
+        if tree:
+            self.in_order_tour(tree.left)
+            print(tree.data.value)
+            self.in_order_tour(tree.right)
+
+    def preorder_tour(self, tree: 'Tree'):
+        if tree:
+            print(tree.data.value)
+            self.preorder_tour(tree.left)
+            self.preorder_tour(tree.right)
+
+    def exists_vertex(self, vertex: 'Tree', tree: 'Tree') -> 'bool':
+        if not tree:
+            return False
+        elif tree == vertex:
+            return True
+        elif vertex < tree:
+            return self.exists_vertex(vertex, tree.left)
+        else:
+            return self.exists_vertex(vertex, tree.right)
+
+    def get_vertex(self, vertex: 'Tree', tree: 'Tree') -> 'Tree':
+        if not tree:
+            return None
+        elif tree == vertex:
+            return tree
+        elif vertex < tree:
+            return self.get_vertex(vertex, tree.left)
+        else:
+            return self.get_vertex(vertex, tree.right)
+
+    def delete_vertex(self, vertex: 'Tree', tree: 'Tree') -> 'Tree':
+
+        found_vertex: 'Tree' = self.get_vertex(vertex, tree)
+
+        if found_vertex.left is None and found_vertex.right is None:
+            if found_vertex.parent.left is not None and found_vertex.parent.left == found_vertex:
+                found_vertex.parent.left = None
+            else:
+                found_vertex.parent.right = None
+        elif found_vertex.left is None:
+            self.transplant(found_vertex, found_vertex.right, tree)
+        elif found_vertex.right is None:
+            self.transplant(found_vertex, found_vertex.left, tree)
+        else:
+            temp: 'Tree' = found_vertex.right
+            while temp.left is not None:
+                temp = temp.left
+
+            if temp.parent != found_vertex:
+                self.transplant(temp, temp.right, tree)
+                temp.right = found_vertex.right
+                temp.right.parent = temp
+            self.transplant(found_vertex, temp, tree)
+            temp.left = found_vertex.left
+            temp.left.parent = temp
+            if found_vertex.parent is None:
+                return temp
+        return tree
+
+    def transplant(self, vertex_a: 'Tree', vertex_b: 'Tree', tree: 'Tree'):
+        if vertex_a.parent is not None:
+            if vertex_a == vertex_a.parent.left:
+                vertex_a.parent.left = vertex_b
+            else:
+                vertex_a.parent.right = vertex_b
+
+        if vertex_b is not None:
+            vertex_b.parent = vertex_a.parent
+
+    def adjacent_vertexes(self, vertex: 'Tree', tree: 'Tree') -> list['Tree']:
+        if not tree:
+            return []
+        elif tree == vertex:
+            return [tree.left, tree.right, tree.parent]
+        elif vertex < tree:
+            return self.adjacent_vertexes(vertex, tree.left)
+        else:
+            return self.adjacent_vertexes(vertex, tree.right)
+
+    def depth_tour(self, tree: 'Tree'):
+        if tree:
+            self.depth_tour(tree.left)
+            self.depth_tour(tree.right)
+            print(tree.data.value)
+
+    def broad_tour(self, nodes: list['Tree']):
+
+        if len(nodes) == 0:
+            return
+
+        for node in nodes:
+            if node is not None:
+                print(node.data.value, end=" ")
+        print()
+
+        children = []
+        for node in nodes:
+            if node is not None:
+                children.append(node.left)
+                children.append(node.right)
+
+        self.broad_tour(children)
+
 
 def test_tree():
-    tree = Tree(TreeObject('c', 5), Tree(TreeObject('b', 2), Tree(TreeObject('a', 1))), Tree(TreeObject('d', 7)))
+    tree = Tree(TreeObject('c', 6))
+
+    print(tree)
+
+    tree.add_new_vertex(Tree(TreeObject('b', 3)), tree)
+    tree.add_new_vertex(Tree(TreeObject('a', 1)), tree)
+    tree.add_new_vertex(Tree(TreeObject('d', 7)), tree)
+    tree.add_new_vertex(Tree(TreeObject('e', 4)), tree)
+    tree.add_new_vertex(Tree(TreeObject('f', 5)), tree)
+    tree.add_new_vertex(Tree(TreeObject('g', 2)), tree)
+    tree.add_new_vertex(Tree(TreeObject('h', 9)), tree)
+    tree.add_new_vertex(Tree(TreeObject('i', 8)), tree)
+    tree.add_new_vertex(Tree(TreeObject('j', 10)), tree)
+
+    print(tree)
+
+    tree.in_order_tour(tree)
+    print()
+    tree.preorder_tour(tree)
+    print()
+    tree.depth_tour(tree)
+    print()
+    print(tree.exists_vertex(Tree(TreeObject('g', 2)), tree))
+    print()
+
+    adjacent_list: list['Tree'] = tree.adjacent_vertexes(Tree(TreeObject('c', 6)), tree)
+    if adjacent_list[0]:
+        print("left: " + str(adjacent_list[0].data.value))
+    if adjacent_list[1]:
+        print("right: " + str(adjacent_list[1].data.value))
+    if adjacent_list[2]:
+        print("father: " + str(adjacent_list[2].data.value))
+    print()
+
+    tree.broad_tour([tree])
+
+    tree = tree.delete_vertex(Tree(TreeObject('a', 1)), tree)
     print(tree)
 
 
