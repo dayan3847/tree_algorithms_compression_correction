@@ -52,3 +52,9 @@ class FileManager:
             encode.add_code(code)
 
         return encode
+
+    @staticmethod
+    def write_txt(file_name: str, text: str):
+        file = codecs.open(file_name, 'w', encoding='utf-8-sig')
+        file.write(text)
+        file.close()

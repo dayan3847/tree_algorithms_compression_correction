@@ -36,8 +36,9 @@ class TestHuffman(unittest.TestCase):
 
             encode_in_bin = FileManager.read_bin(file_name + '.bin')
             decode_in_bin = huffman.decode(encode_in_bin)
-            print('decode_in_bin')
-            print(decode_in_bin)
+
+            FileManager.write_txt(file_name + '.bin.encode.txt', str(encode_in_bin))
+            FileManager.write_txt(file_name + '.bin.txt', decode_in_bin)
 
 
 if __name__ == '__main__':
