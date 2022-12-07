@@ -1,6 +1,7 @@
 from typing import List
 
-from src.Tree import Tree, TreeObject
+from src.Tree import Tree
+from src.TreeObject import TreeObject
 
 
 class Code:

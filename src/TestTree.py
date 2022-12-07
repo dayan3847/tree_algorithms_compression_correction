@@ -1,9 +1,16 @@
 import unittest
 
 from src import Huffman, Tree, Code, Encode
+from src.TreeObject import TreeObject
 
 
-class TestHuffman(unittest.TestCase):
+class TestTree(unittest.TestCase):
+
+    def test_tree1(self):
+        tree = Tree(TreeObject('c', 5), Tree(TreeObject('b', 2), Tree(TreeObject('a', 1))), Tree(TreeObject('d', 7)))
+        print(tree)
+        self.assertEqual(tree.left.left.data.name, 'a')
+        self.assertEqual(tree.left.left.data.value, 1)
 
     def test_code_extract(self):
         code = Code(0, 3)
