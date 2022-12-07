@@ -9,6 +9,7 @@ class TestHuffmanInTextFiles(unittest.TestCase):
     def test_my_test(self):
         # list of all texts files names
         file_list: List[str] = [
+            'text_hello_world.txt',
             'text_alejo_carpentier_los_pasos_perdidos.txt',
             'text_carlos_fuentes_aura.txt',
             'text_fernando_del_paso_palinuro_de_mexico.txt',

@@ -24,8 +24,8 @@ class FrequencyCalculator:
                     else:
                         letras[x] += 1
             archivo.close()
-            self.symbols = sorted(letras.items(), key=lambda t: t[1], reverse=True)
-            return self.symbols
+        self.symbols = sorted(letras.items(), key=lambda t: t[1], reverse=True)
+        return self.symbols
 
     def frequency_symbols(self, verbose: bool = False) -> dict[str, float]:
         if self.symbols is None:

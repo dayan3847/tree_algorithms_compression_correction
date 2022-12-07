@@ -1,15 +1,21 @@
 import unittest
 
+from src.FileManager import FileManager
+
 
 class TestFile(unittest.TestCase):
+
+    def test_read_txt(self):
+        text1 = FileManager.read_txt('text_hello_world.txt')
+        print(text1)
+        text2 = FileManager.read_txt('text_alejo_carpentier_los_pasos_perdidos.txt')
+        print(text2)
 
     def test_file1(self):
         file_name = 'file.bin'
 
         # 1 x 8
         s = "10101010"
-
-        'text_fernando_del_paso_palinuro_de_mexico'
 
         i = 0
         buffer = bytearray()
