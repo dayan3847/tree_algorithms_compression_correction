@@ -238,6 +238,17 @@ def test_tree():
 
     tree = tree.delete_vertex(Tree(TreeObject('a', 1)), tree)
     print(tree)
+    print()
+
+    prolog = Prolog()
+
+    prolog.consult("prolog_bd.pl")
+
+    resultado = list(prolog.query("faster(X,dog)"))
+    print(resultado)
+
+    resultado1 = list(prolog.query("exists_vertex(8,T)"))
+    print(resultado1)
 
 
 if __name__ == '__main__':
