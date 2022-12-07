@@ -5,19 +5,26 @@ from src import Huffman, Tree, Code, Encode
 
 class TestHuffman(unittest.TestCase):
 
-    def test_code1(self):
+    def test_code_extract(self):
         code = Code(0, 3)
-        print(f'code: {code} Base10: {code.code} Length: {code.length}')
-
         code2 = code.extract(1)
-        print(f'code2: {code2} Base10: {code2.code} Length: {code2.length}')
 
-        code2 = Code.get_code_from_string('101')
-        print(f'code2: {code2} Base10: {code2.code}')
+        self.assertEqual(code.code, 0)
+        self.assertEqual(code.length, 2)
 
-        self.assertTrue(True)
+        self.assertEqual(code2.code, 0)
+        self.assertEqual(code2.length, 1)
 
-    def test_huffman1(self):
+        print(f'Code: {code} Base10: {code.code} Length: {code.length}')
+        print(f'Code2: {code2} Base10: {code2.code} Length: {code2.length}')
+
+    def test_code_get_code_from_string(self):
+        code = Code.get_code_from_string('101')
+        self.assertEqual(code.code, 5)
+        self.assertEqual(code.length, 3)
+        print(f'Code: {code} Base10: {code.code}')
+
+    def test_huffman_tree_codes(self):
         my_frequency_dict: dict[str, float] = {
             "A": 0.10,
             "B": 0.15,
@@ -28,7 +35,7 @@ class TestHuffman(unittest.TestCase):
 
         huffman: Huffman = Huffman(my_frequency_dict)
 
-        tree: Tree = huffman.generate_tree()
+        tree: Tree = huffman.generate_tree(True)
         print('Tree:')
         print(tree)
 
@@ -36,6 +43,41 @@ class TestHuffman(unittest.TestCase):
         print('Codes:')
         for i in code_dict:
             print(f'{i}: {code_dict[i]}')
+
+    def test_huffman_encode_decode(self):
+        my_frequency_dict: dict[str, float] = {
+            "A": 0.10,
+            "B": 0.15,
+            "C": 0.30,
+            "D": 0.16,
+            "E": 0.29,
+        }
+
+        huffman: Huffman = Huffman(my_frequency_dict)
+
+        # text: str = 'B'
+        text: str = 'ACABADA'
+        encoded: Encode = huffman.encode(text)
+        encoded_string: str = str(encoded)
+        print(f'Encoded "{text}": {encoded_string}')
+        for code in encoded.codes:
+            print(f'Base10: {code.code}, Length: {code.length}')
+
+        decoded_text: str = huffman.decode(encoded)
+        print(f'Decoded "{encoded_string}": {decoded_text}')
+
+        self.assertEqual(text, decoded_text)
+
+    def test_huffman_encode_decode_one_code(self):
+        my_frequency_dict: dict[str, float] = {
+            "A": 0.10,
+            "B": 0.15,
+            "C": 0.30,
+            "D": 0.16,
+            "E": 0.29,
+        }
+
+        huffman: Huffman = Huffman(my_frequency_dict)
 
         # text = 'B'
         text: str = 'ACABADA'
@@ -55,7 +97,9 @@ class TestHuffman(unittest.TestCase):
         decoded_text2: str = huffman.decode_one_code(encoded2)
         print(f'Decoded "{encoded_string2}": {decoded_text2}')
 
-        self.assertTrue(True)
+        self.assertEqual(encoded_string, encoded_string2)
+        self.assertEqual(text, decoded_text)
+        self.assertEqual(text, decoded_text2)
 
     def test_something(self):
         self.assertEqual(True, True)  # add assertion here
