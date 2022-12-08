@@ -244,11 +244,10 @@ def test_tree():
 
     prolog.consult("prolog_bd.pl")
 
-    resultado = list(prolog.query("faster(X,dog)"))
-    print(resultado)
+    list(prolog.query("level_order([[1,[2,[4,[7,nil,nil],nil],[5,nil,nil]],[3,[6,[8,nil,nil],[9,nil,nil]],nil]]])"))
 
-    resultado1 = list(prolog.query("exists_vertex(8,T)"))
-    print(resultado1)
+    """resultado1 = list(prolog.query("exists_vertex(8,T)"))
+    print(resultado1)"""
 
 
 if __name__ == '__main__':
