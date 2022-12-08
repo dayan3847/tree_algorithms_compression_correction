@@ -1,6 +1,8 @@
 /*t(Label, LeftTree, RightTree).
 t(2, t(1, nil, nil), t(3, nil, nil)).*/
 
+tree(x, nil, nil).
+
 find(E, t(E, _, _)).
 find(E, t(Root, L, _)):- E < Root, find(E, L).
 find(E, t(Root, _, R)):- E > Root, find(E, R).
