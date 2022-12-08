@@ -1,6 +1,6 @@
 from typing import List
 
-from src import Code
+from src.huffman.Code import Code
 
 
 class Encode:

@@ -1,4 +1,6 @@
-from src import Tree, Code, Encode, TreeObject
+from src.huffman.Code import Code
+from src.huffman.Encode import Encode
+from src.tree import Tree, TreeObject
 
 
 class Huffman:

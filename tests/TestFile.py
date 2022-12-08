@@ -1,14 +1,14 @@
 import unittest
 
-from src.FileManager import FileManager
+from src.file_manager.FileManager import FileManager
 
 
 class TestFile(unittest.TestCase):
 
     def test_read_txt(self):
-        text1 = FileManager.read_txt('text_hello_world.txt')
+        text1 = FileManager.read_txt('../src/file_manager/text_hello_world.txt')
         print(text1)
-        text2 = FileManager.read_txt('text_alejo_carpentier_los_pasos_perdidos.txt')
+        text2 = FileManager.read_txt('../src/file_manager/text_alejo_carpentier_los_pasos_perdidos.txt')
         print(text2)
 
     def test_file1(self):

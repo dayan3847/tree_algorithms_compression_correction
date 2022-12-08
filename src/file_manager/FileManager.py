@@ -1,6 +1,7 @@
 import codecs
 
-from src import Encode, Code
+from src.huffman.Code import Code
+from src.huffman.Encode import Encode
 
 
 class FileManager:
