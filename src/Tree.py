@@ -68,11 +68,12 @@ class Tree:
             else:
                 self.add_new_vertex(new_vertex, tree.right)
 
-    def in_order_tour(self, tree: 'Tree'):
-        if tree:
-            self.in_order_tour(tree.left)
-            print(tree.data.value)
-            self.in_order_tour(tree.right)
+    def in_order_tour(self):
+        if None is not self.left:
+            self.left.in_order_tour()
+        print(self.data.value)
+        if None is not self.right:
+            self.right.in_order_tour()
 
     def preorder_tour(self, tree: 'Tree'):
         if tree:
@@ -191,7 +192,8 @@ def test_tree():
 
     print(tree)
 
-    tree.in_order_tour(tree)
+    print('in_order_tour')
+    tree.in_order_tour()
     print()
     tree.preorder_tour(tree)
     print()
