@@ -176,19 +176,19 @@ class Tree:
 
 
 def test_tree():
-    tree = Tree(TreeObject('c', 6))
+    tree = Tree(TreeObject('c', 12))
 
     print(tree)
 
-    tree.add_new_vertex(Tree(TreeObject('b', 3)), tree)
-    tree.add_new_vertex(Tree(TreeObject('a', 1)), tree)
-    tree.add_new_vertex(Tree(TreeObject('d', 7)), tree)
-    tree.add_new_vertex(Tree(TreeObject('e', 4)), tree)
-    tree.add_new_vertex(Tree(TreeObject('f', 5)), tree)
-    tree.add_new_vertex(Tree(TreeObject('g', 2)), tree)
-    tree.add_new_vertex(Tree(TreeObject('h', 9)), tree)
-    tree.add_new_vertex(Tree(TreeObject('i', 8)), tree)
-    tree.add_new_vertex(Tree(TreeObject('j', 10)), tree)
+    tree.add_new_vertex(Tree(TreeObject('b', 6)), tree)
+    tree.add_new_vertex(Tree(TreeObject('a', 2)), tree)
+    tree.add_new_vertex(Tree(TreeObject('d', 14)), tree)
+    tree.add_new_vertex(Tree(TreeObject('e', 8)), tree)
+    tree.add_new_vertex(Tree(TreeObject('f', 10)), tree)
+    tree.add_new_vertex(Tree(TreeObject('g', 4)), tree)
+    tree.add_new_vertex(Tree(TreeObject('h', 18)), tree)
+    tree.add_new_vertex(Tree(TreeObject('i', 16)), tree)
+    tree.add_new_vertex(Tree(TreeObject('j', 20)), tree)
 
     prolog = Prolog()
 
@@ -219,8 +219,8 @@ def test_tree():
                 tree.add_new_vertex(Tree(TreeObject(character, value)), tree)
             elif option == 2:
                 value = input("Introduzca un valor para el vértice: ")
-                temp = "insert(" + value + ",tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil)))," \
-                                           "tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil)))), NewTree) "
+                temp = "insert(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),"\
+                                           "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))), NewTree) "
                 result = list(prolog.query(temp))
                 print(result)
 
@@ -234,8 +234,8 @@ def test_tree():
                 print(tree.exists_vertex(Tree(TreeObject(character, value)), tree))
             elif option == 2:
                 value = input("Introduzca un valor para el vértice: ")
-                temp = "exists(" + value + ",tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil)))," \
-                                           "tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil))))) "
+                temp = "exists(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),"\
+                                           "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil))))) "
                 result = bool(list(prolog.query(temp)))
                 print(result)
 
@@ -271,8 +271,8 @@ def test_tree():
                 tree.preorder_tour(tree)
                 print()
             elif option == 2:
-                result = list(prolog.query("preorder(tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,"
-                                           "nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil)))), List)."))
+                result = list(prolog.query("preorder(tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,"
+                                           "nil))),tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))), List)."))
                 print(result)
 
         elif option == 7:
@@ -284,16 +284,16 @@ def test_tree():
         elif option == 9:
             value_1 = input("Introduzca un valor para el vértice hijo: ")
             value_2 = input("Introduzca un valor para el vértice padre: ")
-            temp = "parent(" + value_2 + "," + value_1 + ",tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil," \
-                                                         "tree(5,nil,nil))),tree(7,nil," \
-                                                         "tree(9,tree(8,nil,nil),tree(10,nil,nil))))) "
+            temp = "parent(" + value_2 + "," + value_1 + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil," \
+                                                         "tree(10,nil,nil))),tree(14,nil," \
+                                                         "tree(18,tree(16,nil,nil),tree(20,nil,nil))))) "
             result = bool(list(prolog.query(temp)))
             print(result)
 
         elif option == 10:
             value = input("Introduzca un valor para el vértice: ")
-            temp = "leaf(" + value + ",tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7," \
-                                     "nil,tree(9,tree(8,nil,nil),tree(10,nil,nil))))) "
+            temp = "leaf(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil)))," \
+                                     "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil))))) "
             result = bool(list(prolog.query(temp)))
             print(result)
 
