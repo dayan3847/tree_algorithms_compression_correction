@@ -1,6 +1,6 @@
 from pyswip import Prolog
 
-from src import TreeObject
+from src.tree.TreeObject import TreeObject
 
 
 class Tree:
@@ -219,12 +219,9 @@ def test_tree():
 
     prolog = Prolog()
 
-    prolog.consult("prolog_bd.pl")
+    prolog.consult("../file_manager/prolog_bd.pl")
 
-    list(prolog.query("level_order([[1,[2,[4,[7,nil,nil],nil],[5,nil,nil]],[3,[6,[8,nil,nil],[9,nil,nil]],nil]]])"))
-
-    """resultado1 = list(prolog.query("exists_vertex(8,T)"))
-    print(resultado1)"""
+    list(prolog.query("listing(parent)"))
 
 
 if __name__ == '__main__':
