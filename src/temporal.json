@@ -1,27 +1,27 @@
 {
   "name": "c",
-  "value": "6",
+  "value": "12",
   "left": {
     "name": "b",
-    "value": "3",
+    "value": "6",
     "left": {
       "name": "a",
-      "value": "1",
+      "value": "2",
       "left": "None",
       "right": {
         "name": "g",
-        "value": "2",
+        "value": "4",
         "left": "None",
         "right": "None"
       }
     },
     "right": {
       "name": "e",
-      "value": "4",
+      "value": "8",
       "left": "None",
       "right": {
         "name": "f",
-        "value": "5",
+        "value": "10",
         "left": "None",
         "right": "None"
       }
@@ -29,27 +29,27 @@
   },
   "right": {
     "name": "d",
-    "value": "7",
+    "value": "14",
     "left": "None",
     "right": {
       "name": "h",
-      "value": "9",
+      "value": "18",
       "left": {
         "name": "i",
-        "value": "8",
-        "left": "None",
-        "right": "None"
-      },
-      "right": {
-        "name": "j",
-        "value": "10",
-        "left": "None",
-        "right": {
+        "value": "16",
+        "left": {
           "name": "w",
           "value": "15",
           "left": "None",
           "right": "None"
-        }
+        },
+        "right": "None"
+      },
+      "right": {
+        "name": "j",
+        "value": "20",
+        "left": "None",
+        "right": "None"
       }
     }
   }
