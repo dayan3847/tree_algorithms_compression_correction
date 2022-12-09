@@ -10,8 +10,8 @@ find(Node, tree(Parent, _, Right), NodeTree) :- Node > Parent, find(Node, Right,
 % parent(Parent, Child, Tree)
 parent(Parent, Child, tree(Parent, tree(Child, _, _), _)) :- !.
 parent(Parent, Child, tree(Parent, _, tree(Child, _, _))) :- !.
-parent(Parent, Child, tree(Root, Left, _)) :- Parent < Root, parent(Parent, Child, Left), !.
-parent(Parent, Child, tree(Root, _, Right)) :- Parent > Root, parent(Parent, Child, Right), !.
+parent(Parent, Child, tree(Root, Left, _)) :- Child < Root, parent(Parent, Child, Left), !.
+parent(Parent, Child, tree(Root, _, Right)) :- Child > Root, parent(Parent, Child, Right), !.
 
 % Direct Childrens
 % childrens(Parent, Childrens, Tree)
@@ -35,7 +35,7 @@ leaf(Leaf, tree(_, _, Right)) :- leaf(Leaf, Right), !.
 % Level (Level of a Tree)
 % level(Level, Tree)
 level(0, nil) :- !.
-level(max(LeftLevel, RightLevel) + 1, tree(_, Left, Right)) :- level(LeftLevel, Left), level(RightLevel, Right).
+level(Level, tree(_, Left, Right)) :- level(LeftLevel, Left), level(RightLevel, Right), Level is max(LeftLevel, RightLevel) + 1.
 
 % Insert (Insert a node)
 % insert(Node, Tree, NewTree)
@@ -68,3 +68,7 @@ inorder(tree(Node, Left, Right), List) :- inorder(Left, LeftList), inorder(Right
 % postorder(Tree, List)
 postorder(nil, []) :- !.
 postorder(tree(Node, Left, Right), List) :- postorder(Left, LeftList), postorder(Right, RightList), append(LeftList, RightList, TempList), append(TempList, [Node], List), !.
+
+% example
+% exampleTree(Tree) :- Tree = tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))).
+% exampleTree(myTree).
