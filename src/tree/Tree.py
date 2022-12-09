@@ -190,38 +190,61 @@ def test_tree():
     tree.add_new_vertex(Tree(TreeObject('i', 8)), tree)
     tree.add_new_vertex(Tree(TreeObject('j', 10)), tree)
 
-    print(tree)
-
-    print('in_order_tour')
-    tree.in_order_tour()
-    print()
-    tree.preorder_tour(tree)
-    print()
-    tree.depth_tour(tree)
-    print()
-    print(tree.exists_vertex(Tree(TreeObject('g', 2)), tree))
-    print()
-
-    adjacent_list: list['Tree'] = tree.adjacent_vertexes(Tree(TreeObject('c', 6)), tree)
-    if adjacent_list[0]:
-        print("left: " + str(adjacent_list[0].data.value))
-    if adjacent_list[1]:
-        print("right: " + str(adjacent_list[1].data.value))
-    if adjacent_list[2]:
-        print("father: " + str(adjacent_list[2].data.value))
-    print()
-
-    tree.broad_tour([tree])
-
-    tree = tree.delete_vertex(Tree(TreeObject('a', 1)), tree)
-    print(tree)
-    print()
-
     prolog = Prolog()
 
     prolog.consult("../file_manager/prolog_bd.pl")
 
-    list(prolog.query("listing(parent)"))
+    close_menu = False
+    while not close_menu:
+        print("1. Añadir un vértice.")
+        print("2. Buscar un vértices.")
+        print("3. Eliminar un vértices.")
+        print("4. Buscar adyacentes a un vértices.")
+        print("5. Recorrer en orden.")
+        print("6. Recorrer en preorden.")
+        print("7. Recorrer en prefundidad.")
+        print("8. Recorrer a lo ancho.")
+        print("9. Salir.")
+        option = int(input("Selecicone una opcion: "))
+
+        if option == 1:
+            character = input("Introduzca una letra para nombrar al vértice: ")
+            value = int(input("Introduzca un valor para el vértice: "))
+            tree.add_new_vertex(Tree(TreeObject(character, value)), tree)
+            print(tree)
+        elif option == 2:
+            character = input("Introduzca la letra del vértice: ")
+            value = int(input("Introduzca el valor del vértice: "))
+            print(tree.exists_vertex(Tree(TreeObject(character, value)), tree))
+        elif option == 3:
+            character = input("Introduzca la letra del vértice: ")
+            value = int(input("Introduzca el valor del vértice: "))
+            tree.delete_vertex(Tree(TreeObject(character, value)), tree)
+            print(tree)
+        elif option == 4:
+            character = input("Introduzca la letra del vértice: ")
+            value = int(input("Introduzca el valor del vértice: "))
+            result = tree.adjacent_vertexes(Tree(TreeObject(character, value)), tree)
+            for i in result:
+                if i is not None:
+                    print(i.data.value)
+        elif option == 5:
+            print("1. Usar Python.")
+            print("2. Usar Prolog.")
+            option = int(input("Selecicone una opcion: "))
+            if option == 1:
+                tree.in_order_tour()
+            elif option == 2:
+                result = list(prolog.query("tree(T), inorder(T)"))
+                print(result)
+        elif option == 6:
+            tree.preorder_tour(tree)
+        elif option == 7:
+            tree.depth_tour(tree)
+        elif option == 8:
+            tree.broad_tour([tree])
+        elif option == 9:
+            close_menu = True
 
 
 if __name__ == '__main__':
