@@ -19,7 +19,12 @@
       "name": "e",
       "value": "4",
       "left": "None",
-      "right": "None"
+      "right": {
+        "name": "f",
+        "value": "5",
+        "left": "None",
+        "right": "None"
+      }
     }
   },
   "right": {
@@ -39,7 +44,12 @@
         "name": "j",
         "value": "10",
         "left": "None",
-        "right": "None"
+        "right": {
+          "name": "w",
+          "value": "15",
+          "left": "None",
+          "right": "None"
+        }
       }
     }
   }
