@@ -1,40 +1,68 @@
 
 tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil)))).
 
+%% exists in tree
+%% insert(Node, Tree)
+exists(Node, tree(Node, _, _)) :- !.
+exists(Node, tree(_, Left, _)) :- exists(Node, Left), !.
+exists(Node, tree(_, _, Right)) :- exists(Node, Right), !.
+% exists(6,tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil))))).
+% exists(9,tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil))))).
+% exists(2,tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil))))).
+
 % is parent
-% no search other results
-parent(Parent, Child) :- tree(Parent, tree(Child,_,_), _); tree(Parent, _, tree(Child,_,_)).
-parent(Parent, Child) :- parent(Parent, X), parent(X, Child).
+% parent(Parent, Child, Tree)
+parent(Parent, Child, tree(Parent, Left, _)) :- exists(Child, Left), !.
+parent(Parent, Child, tree(Parent, _, Right)) :- exists(Child, Right), !.
+parent(Parent, Child, tree(_, Left, _)) :- parent(Parent, Child, Left), !.
+parent(Parent, Child, tree(_, _, Right)) :- parent(Parent, Child, Right), !.
+% parent(3,5,tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil))))).
 
-% es un nodo hoja
-leaf(Leaf) :- tree(Leaf, nil, nil).
+% is a leaf node
+% leaf(Leaf, Tree)
+leaf(Leaf, tree(Leaf, nil, nil)) :- !.
+leaf(Leaf, tree(_, Left, _)) :- leaf(Leaf, Left), !.
+leaf(Leaf, tree(_, _, Right)) :- leaf(Leaf, Right), !.
+% leaf(2,tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil))))).
 
-% es un nodo interno
-internal(Internal) :- tree(Internal, _, _).
-internal(Internal) :- tree(Internal, _, _), not(leaf(Internal)).
+% insert a node
+% insert(Node, Tree, NewTree)
+insert(Node, tree(Parent, nil, Right ), tree(Parent, tree(Node, nil, nil), Right)) :- Node < Parent, !.
+insert(Node, tree(Parent, Left, nil ), tree(Parent, Left, tree(Node, nil, nil))) :- Node > Parent, !.
+insert(Node, tree(Parent, Left, Right), tree(Parent, NewLeft, Right)) :- Node < Parent, insert(Node, Left, NewLeft), !.
+insert(Node, tree(Parent, Left, Right), tree(Parent, Left, NewRight)) :- Node > Parent, insert(Node, Right, NewRight), !.
+% insert(99,tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil)))), NewTree).
+% insert(4.5,tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil)))), NewTree).
 
 % preorder
-preorder(nil, []).
-preorder(tree(Root, Left, Right), [Root|List]) :-
-    preorder(Left, LeftList),
-    preorder(Right, RightList),
-    append(LeftList, RightList, List).
+% preorder(Tree, List)
+preorder(nil, []) :- !.
+preorder(tree(Node, Left, Right), [Node|List]) :- preorder(Left, LeftList), preorder(Right, RightList), append(LeftList, RightList, List), !.
+% preorder(tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil)))), List).
 
-% inorder
-inorder(nil, []).
-inorder(tree(Root, Left, Right), List) :-
-    inorder(Left, LeftList),
-    inorder(Right, RightList),
-    append(LeftList, [Root|RightList], List).
 
-% insert
-insert(X, nil, tree(X, nil, nil)).
-insert(X, tree(Root, Left, Right), tree(Root, NewLeft, Right)) :-
-    X =< Root,
-    insert(X, Left, NewLeft).
-insert(X, tree(Root, Left, Right), tree(Root, Left, NewRight)) :-
-    X > Root,
-    insert(X, Right, NewRight).
+
+%preorder(nil, []).
+%preorder(tree(Root, Left, Right), [Root|List]) :-
+%    preorder(Left, LeftList),
+%    preorder(Right, RightList),
+%    append(LeftList, RightList, List).
+%
+%% inorder
+%inorder(nil, []).
+%inorder(tree(Root, Left, Right), List) :-
+%    inorder(Left, LeftList),
+%    inorder(Right, RightList),
+%    append(LeftList, [Root|RightList], List).
+%
+%% insert
+%insert(X, nil, tree(X, nil, nil)).
+%insert(X, tree(Root, Left, Right), tree(Root, NewLeft, Right)) :-
+%    X =< Root,
+%    insert(X, Left, NewLeft).
+%insert(X, tree(Root, Left, Right), tree(Root, Left, NewRight)) :-
+%    X > Root,
+%    insert(X, Right, NewRight).
 
 
 
