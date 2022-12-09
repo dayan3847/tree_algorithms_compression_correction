@@ -1,6 +1,10 @@
 import unittest
 
-from src import Huffman, Tree, Code, Encode, TreeObject
+from src.tree.Tree import Tree
+from src.tree.TreeObject import TreeObject
+from src.huffman.Code import Code
+from src.huffman.Encode import Encode
+from src.huffman.Huffman import Huffman
 
 
 class TestTree(unittest.TestCase):
