@@ -174,6 +174,11 @@ class Tree:
 
         self.broad_tour(children)
 
+    def get_level(self) -> int:
+        left_level: int = 0 if self.left is None else self.left.get_level()
+        right_level: int = 0 if self.right is None else self.right.get_level()
+        return max(left_level, right_level) + 1
+
 
 def test_tree():
     tree = Tree(TreeObject('c', 12))
@@ -219,7 +224,7 @@ def test_tree():
                 tree.add_new_vertex(Tree(TreeObject(character, value)), tree)
             elif option == 2:
                 value = input("Introduzca un valor para el vértice: ")
-                temp = "insert(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),"\
+                temp = "insert(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil)))," \
                                            "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))), NewTree) "
                 result = list(prolog.query(temp))
                 print(result)
@@ -234,7 +239,7 @@ def test_tree():
                 print(tree.exists_vertex(Tree(TreeObject(character, value)), tree))
             elif option == 2:
                 value = input("Introduzca un valor para el vértice: ")
-                temp = "exists(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),"\
+                temp = "exists(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil)))," \
                                            "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil))))) "
                 result = bool(list(prolog.query(temp)))
                 print(result)
