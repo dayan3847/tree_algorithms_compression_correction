@@ -181,6 +181,9 @@ class Tree:
         right_level: int = 0 if self.right is None else self.right.get_level()
         return max(left_level, right_level) + 1
 
+    def is_leaf(self) -> bool:
+        return self.left is None and self.right is None
+
 
 def test_tree():
     tree = Tree(TreeObject('c', 12))
