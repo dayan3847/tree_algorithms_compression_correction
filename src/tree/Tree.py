@@ -214,6 +214,9 @@ def test_tree():
         print("11. Salir.")
         option = int(input("Selecicone una opcion: "))
 
+        tree_prolog = 'tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),' \
+                      'tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))) '
+
         if option == 1:
             print("1. Usar Python.")
             print("2. Usar Prolog.")
@@ -224,8 +227,7 @@ def test_tree():
                 tree.add_new_vertex(Tree(TreeObject(character, value)), tree)
             elif option == 2:
                 value = input("Introduzca un valor para el vértice: ")
-                temp = "insert(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil)))," \
-                                           "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))), NewTree) "
+                temp = f"insert({value}, {tree_prolog}, NewTree) "
                 result = list(prolog.query(temp))
                 print(result)
 
@@ -239,8 +241,7 @@ def test_tree():
                 print(tree.exists_vertex(Tree(TreeObject(character, value)), tree))
             elif option == 2:
                 value = input("Introduzca un valor para el vértice: ")
-                temp = "exists(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil)))," \
-                                           "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil))))) "
+                temp = "exists(" + value + ",) "
                 result = bool(list(prolog.query(temp)))
                 print(result)
 
