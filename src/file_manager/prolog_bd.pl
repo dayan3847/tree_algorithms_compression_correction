@@ -1,6 +1,5 @@
 
-% Test Tree
-% tree(6,tree(3,tree(1,nil,tree(2,nil,nil)),tree(4,nil,tree(5,nil,nil))),tree(7,nil,tree(9,tree(8,nil,nil),tree(10,nil,nil)))).
+tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))).
 
 % Find (Ordered Search)
 % find(Node, Tree)

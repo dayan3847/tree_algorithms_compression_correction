@@ -71,13 +71,13 @@ class Tree:
     def in_order_tour(self):
         if None is not self.left:
             self.left.in_order_tour()
-        print(self.data.value)
+        print(self.data.value, end="")
         if None is not self.right:
             self.right.in_order_tour()
 
     def preorder_tour(self, tree: 'Tree'):
         if tree:
-            print(tree.data.value)
+            print(tree.data.value, end=", ")
             self.preorder_tour(tree.left)
             self.preorder_tour(tree.right)
 
@@ -154,7 +154,7 @@ class Tree:
         if tree:
             self.depth_tour(tree.left)
             self.depth_tour(tree.right)
-            print(tree.data.value)
+            print(tree.data.value, end=", ")
 
     def broad_tour(self, nodes: list['Tree']):
 
@@ -163,7 +163,7 @@ class Tree:
 
         for node in nodes:
             if node is not None:
-                print(node.data.value, end=" ")
+                print(node.data.value, end=", ")
         print()
 
         children = []
@@ -176,52 +176,131 @@ class Tree:
 
 
 def test_tree():
-    tree = Tree(TreeObject('c', 6))
+    tree = Tree(TreeObject('c', 12))
 
     print(tree)
 
-    tree.add_new_vertex(Tree(TreeObject('b', 3)), tree)
-    tree.add_new_vertex(Tree(TreeObject('a', 1)), tree)
-    tree.add_new_vertex(Tree(TreeObject('d', 7)), tree)
-    tree.add_new_vertex(Tree(TreeObject('e', 4)), tree)
-    tree.add_new_vertex(Tree(TreeObject('f', 5)), tree)
-    tree.add_new_vertex(Tree(TreeObject('g', 2)), tree)
-    tree.add_new_vertex(Tree(TreeObject('h', 9)), tree)
-    tree.add_new_vertex(Tree(TreeObject('i', 8)), tree)
-    tree.add_new_vertex(Tree(TreeObject('j', 10)), tree)
-
-    print(tree)
-
-    print('in_order_tour')
-    tree.in_order_tour()
-    print()
-    tree.preorder_tour(tree)
-    print()
-    tree.depth_tour(tree)
-    print()
-    print(tree.exists_vertex(Tree(TreeObject('g', 2)), tree))
-    print()
-
-    adjacent_list: list['Tree'] = tree.adjacent_vertexes(Tree(TreeObject('c', 6)), tree)
-    if adjacent_list[0]:
-        print("left: " + str(adjacent_list[0].data.value))
-    if adjacent_list[1]:
-        print("right: " + str(adjacent_list[1].data.value))
-    if adjacent_list[2]:
-        print("father: " + str(adjacent_list[2].data.value))
-    print()
-
-    tree.broad_tour([tree])
-
-    tree = tree.delete_vertex(Tree(TreeObject('a', 1)), tree)
-    print(tree)
-    print()
+    tree.add_new_vertex(Tree(TreeObject('b', 6)), tree)
+    tree.add_new_vertex(Tree(TreeObject('a', 2)), tree)
+    tree.add_new_vertex(Tree(TreeObject('d', 14)), tree)
+    tree.add_new_vertex(Tree(TreeObject('e', 8)), tree)
+    tree.add_new_vertex(Tree(TreeObject('f', 10)), tree)
+    tree.add_new_vertex(Tree(TreeObject('g', 4)), tree)
+    tree.add_new_vertex(Tree(TreeObject('h', 18)), tree)
+    tree.add_new_vertex(Tree(TreeObject('i', 16)), tree)
+    tree.add_new_vertex(Tree(TreeObject('j', 20)), tree)
 
     prolog = Prolog()
 
     prolog.consult("../file_manager/prolog_bd.pl")
 
-    list(prolog.query("listing(parent)"))
+    close_menu = False
+    while not close_menu:
+        print("1. Añadir un vértice.")
+        print("2. Buscar un vértices.")
+        print("3. Eliminar un vértices.")
+        print("4. Buscar adyacentes a un vértices.")
+        print("5. Recorrer en orden.")
+        print("6. Recorrer en preorden.")
+        print("7. Recorrer en prefundidad.")
+        print("8. Recorrer a lo ancho.")
+        print("9. Determinar si un nodo es padre de otro.")
+        print("10. Determinar si un nodo es hoja.")
+        print("11. Salir.")
+        option = int(input("Selecicone una opcion: "))
+
+        if option == 1:
+            print("1. Usar Python.")
+            print("2. Usar Prolog.")
+            option = int(input("Selecicone una opcion: "))
+            if option == 1:
+                character = input("Introduzca una letra para nombrar al vértice: ")
+                value = int(input("Introduzca un valor para el vértice: "))
+                tree.add_new_vertex(Tree(TreeObject(character, value)), tree)
+            elif option == 2:
+                value = input("Introduzca un valor para el vértice: ")
+                temp = "insert(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),"\
+                                           "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))), NewTree) "
+                result = list(prolog.query(temp))
+                print(result)
+
+        elif option == 2:
+            print("1. Usar Python.")
+            print("2. Usar Prolog.")
+            option = int(input("Selecicone una opcion: "))
+            if option == 1:
+                character = input("Introduzca la letra del vértice: ")
+                value = int(input("Introduzca el valor del vértice: "))
+                print(tree.exists_vertex(Tree(TreeObject(character, value)), tree))
+            elif option == 2:
+                value = input("Introduzca un valor para el vértice: ")
+                temp = "exists(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil))),"\
+                                           "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil))))) "
+                result = bool(list(prolog.query(temp)))
+                print(result)
+
+        elif option == 3:
+            character = input("Introduzca la letra del vértice: ")
+            value = int(input("Introduzca el valor del vértice: "))
+            tree.delete_vertex(Tree(TreeObject(character, value)), tree)
+            print(tree)
+
+        elif option == 4:
+            character = input("Introduzca la letra del vértice: ")
+            value = int(input("Introduzca el valor del vértice: "))
+            result = tree.adjacent_vertexes(Tree(TreeObject(character, value)), tree)
+            for i in result:
+                if i is not None:
+                    print(i.data.value)
+
+        elif option == 5:
+            print("1. Usar Python.")
+            print("2. Usar Prolog.")
+            option = int(input("Selecicone una opcion: "))
+            if option == 1:
+                tree.in_order_tour()
+            elif option == 2:
+                result = list(prolog.query("tree(T), inorder(T)"))
+                print(result)
+
+        elif option == 6:
+            print("1. Usar Python.")
+            print("2. Usar Prolog.")
+            option = int(input("Selecicone una opcion: "))
+            if option == 1:
+                tree.preorder_tour(tree)
+                print()
+            elif option == 2:
+                result = list(prolog.query("preorder(tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,"
+                                           "nil))),tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil)))), List)."))
+                print(result)
+
+        elif option == 7:
+            tree.depth_tour(tree)
+
+        elif option == 8:
+            tree.broad_tour([tree])
+
+        elif option == 9:
+            value_1 = input("Introduzca un valor para el vértice hijo: ")
+            value_2 = input("Introduzca un valor para el vértice padre: ")
+            temp = "parent(" + value_2 + "," + value_1 + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil," \
+                                                         "tree(10,nil,nil))),tree(14,nil," \
+                                                         "tree(18,tree(16,nil,nil),tree(20,nil,nil))))) "
+            result = bool(list(prolog.query(temp)))
+            print(result)
+
+        elif option == 10:
+            value = input("Introduzca un valor para el vértice: ")
+            temp = "leaf(" + value + ",tree(12,tree(6,tree(2,nil,tree(4,nil,nil)),tree(8,nil,tree(10,nil,nil)))," \
+                                     "tree(14,nil,tree(18,tree(16,nil,nil),tree(20,nil,nil))))) "
+            result = bool(list(prolog.query(temp)))
+            print(result)
+
+        elif option == 11:
+            close_menu = True
+
+        print()
 
 
 if __name__ == '__main__':
