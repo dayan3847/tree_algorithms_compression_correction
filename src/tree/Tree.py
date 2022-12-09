@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from pyswip import Prolog
 
 from src.tree.TreeObject import TreeObject
@@ -224,7 +226,9 @@ def test_tree():
             if option == 1:
                 character = input("Introduzca una letra para nombrar al vértice: ")
                 value = int(input("Introduzca un valor para el vértice: "))
-                tree.add_new_vertex(Tree(TreeObject(character, value)), tree)
+                tree_clone = deepcopy(tree)
+                tree_clone.add_new_vertex(Tree(TreeObject(character, value)), tree_clone)
+                print(tree_clone)
             elif option == 2:
                 value = input("Introduzca un valor para el vértice: ")
                 temp = f"insert({value}, {tree_prolog}, NewTree) "
@@ -241,7 +245,7 @@ def test_tree():
                 print(tree.exists_vertex(Tree(TreeObject(character, value)), tree))
             elif option == 2:
                 value = input("Introduzca un valor para el vértice: ")
-                temp = "exists(" + value + ",) "
+                temp = f"exists({value},{tree_prolog})"
                 result = bool(list(prolog.query(temp)))
                 print(result)
 
