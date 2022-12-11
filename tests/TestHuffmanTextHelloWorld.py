@@ -8,7 +8,7 @@ class TestHuffmanTextHelloWorld(TestHuffman):
     def setUp(self):
         super().setUp()
         self.verbose = True
-        self.file_list = [f'../src/file_manager/text_hello_world.txt']
+        self.file_list = ['text_hello_world']
 
     def test_generate(self):
         super().test_generate()
