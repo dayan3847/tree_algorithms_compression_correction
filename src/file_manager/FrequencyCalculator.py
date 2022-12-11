@@ -57,7 +57,8 @@ class FrequencyCalculator:
         self.frequency_symbols()
         json = "{"
         for s in self.frequencies:
-            json += "\n\t\"%s\":%f," % (s, self.frequencies[s])
+            key = self.symbol_to_export(s)
+            json += "\n\t\"%s\": %f," % (key, self.frequencies[s])
         json = json[:-1]
         json += "\n}"
 
@@ -68,12 +69,35 @@ class FrequencyCalculator:
         json = json[1:-1]
         json = json.replace("\n", "")
         json = json.replace("\t", "")
-        for s in json.split(","):
-            s = s.split(":")
-            key = str(s[0]).replace("\"", "")
+        json = json.replace("\"", "")
+        for s in json.split(','):
+            s = s.split(':')
+            key = str(s[0])
+            # key = key[2:-1]
+            key = self.symbol_to_import(key)
             value = float(s[1])
             self.frequencies[key] = value
         return self.frequencies
+
+    @staticmethod
+    def symbol_to_import(s: str) -> str:
+        if s == '$double_quote':
+            return '\"'
+        elif s == '$new_line':
+            return '\n'
+        elif s == '$tab':
+            return '\t'
+        return s
+
+    @staticmethod
+    def symbol_to_export(s: str) -> str:
+        if s == '\"':
+            return '$double_quote'
+        elif s == '\n':
+            return '$new_line'
+        elif s == '\t':
+            return '$tab'
+        return s
 
 
 if __name__ == '__main__':

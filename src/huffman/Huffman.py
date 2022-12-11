@@ -128,6 +128,17 @@ class Huffman:
         self.generate_code()
         json_codes: str = '{'
         for i in self.code_dict:
-            json_codes += f'\n\t"{i}":{str(self.code_dict[i])},'
+            key = self.symbol_to_export(i)
+            json_codes += f'\n\t"{key}": "{str(self.code_dict[i])}",'
         json_codes = json_codes[:-1] + '\n}'
         return json_codes
+
+    @staticmethod
+    def symbol_to_export(s: str) -> str:
+        if s == '\"':
+            return '$double_quote'
+        elif s == '\n':
+            return '$new_line'
+        elif s == '\t':
+            return '$tab'
+        return s
