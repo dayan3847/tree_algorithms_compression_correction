@@ -1,2 +1,2 @@
-# tree_algorithms_compression_correction
+# Tree Algorithms Compression Correction
 Tree Algorithms Compression Correction
