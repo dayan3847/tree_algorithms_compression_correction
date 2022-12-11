@@ -2,9 +2,7 @@ import unittest
 import time
 from typing import List
 
-import pytest as pytest
-
-from src.huffman import Encode
+from src.huffman import Code
 from src.huffman.Huffman import Huffman
 from src.file_manager.FileManager import FileManager
 from src.file_manager.FrequencyCalculator import FrequencyCalculator
@@ -90,7 +88,7 @@ class TestHuffman(unittest.TestCase):
 
         for file in self.file_list:
             text: str = FileManager.read_txt(file)
-            encode: Encode = huffman.encode(text)
+            encode: Code = huffman.encode(text)
             FileManager.write_bin(f'{file}.bin', encode)
             if self.verbose:
                 print(f'File: {file}')
@@ -110,7 +108,7 @@ class TestHuffman(unittest.TestCase):
         huffman = Huffman(frequencies)
 
         for file in self.file_list:
-            encode: Encode = FileManager.read_bin(f'{file}.bin')
+            encode: Code = FileManager.read_bin(f'{file}.bin')
             decode: str = huffman.decode(encode)
             FileManager.write_txt(f'{file}.bin.txt', decode)
             if self.verbose:

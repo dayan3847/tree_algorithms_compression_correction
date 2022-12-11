@@ -63,6 +63,12 @@ class Code:
         self.length += other.length
         return self
 
+    def complete_byte(self) -> 'Code':
+        if self.length % 8 == 0:
+            return self
+        self.length = self.length + 8 - self.length % 8
+        return self
+
     # def concat_init(self, other: 'Code') -> 'Code':
     #     new_code_code = other.code << self.length | self.code
     #     return Code(new_code_code, self.length + other.length)

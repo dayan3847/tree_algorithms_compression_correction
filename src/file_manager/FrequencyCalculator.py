@@ -70,6 +70,7 @@ class FrequencyCalculator:
         json = json.replace("\n", "")
         json = json.replace("\t", "")
         json = json.replace("\"", "")
+        json = json.replace("\\", "")
         for s in json.split(','):
             s = s.split(':')
             key = str(s[0])
@@ -80,16 +81,6 @@ class FrequencyCalculator:
         return self.frequencies
 
     @staticmethod
-    def symbol_to_import(s: str) -> str:
-        if s == '$double_quote$':
-            return '\"'
-        elif s == '$new_line$':
-            return '\n'
-        elif s == '$tab$':
-            return '\t'
-        return s
-
-    @staticmethod
     def symbol_to_export(s: str) -> str:
         if s == '\"':
             return '$double_quote$'
@@ -97,6 +88,21 @@ class FrequencyCalculator:
             return '$new_line$'
         elif s == '\t':
             return '$tab$'
+        elif s == '\\':
+            return '$backslash$'
+
+        return s
+
+    @staticmethod
+    def symbol_to_import(s: str) -> str:
+        if s == '$double_quote$':
+            return '\"'
+        elif s == '$new_line$':
+            return '\n'
+        elif s == '$tab$':
+            return '\t'
+        elif s == '$backslash$':
+            return '\\'
         return s
 
 
