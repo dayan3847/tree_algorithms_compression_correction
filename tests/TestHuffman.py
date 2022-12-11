@@ -14,18 +14,34 @@ class TestHuffman(unittest.TestCase):
     file_json_codes: str
     verbose: bool
 
+    __path_json__ = '../txt/json/'
+    __path_origin__ = '../txt/origin/'
+    __path_decode__ = '../txt/decode/'
+    __path_bin__ = '../txt/bin/'
+
     def setUp(self):
         super().setUp()
-        self.file_json_frequency = f'../src/file_manager/frequency.json'
-        self.file_json_codes = f'../src/file_manager/codes.json'
-        self.file_json_tree = f'../src/file_manager/tree.json'
+
+        self.file_json_frequency = f'{TestHuffman.__path_json__}frequency.json'
+        self.file_json_codes = f'{TestHuffman.__path_json__}codes.json'
+        self.file_json_tree = f'{TestHuffman.__path_json__}tree.json'
+        self.file_list_full_path: List[str] = []
         self.verbose = False
+
+    def get_file_list_full_path(self) -> List[str]:
+        if len(self.file_list_full_path) == 0:
+            self.file_list_full_path: List[str] = []
+            for file in self.file_list:
+                self.file_list_full_path.append(f'{TestHuffman.__path_origin__}{file}.txt')
+
+        return self.file_list_full_path
 
     def test_generate(self):
         if self.verbose:
             print('test_generate')
 
-        frequency_calculator = FrequencyCalculator(self.file_list)
+        frequency_calculator = FrequencyCalculator(self.get_file_list_full_path())
+
         if self.verbose:
             ts1 = time.time()
             print('Begin: count_symbols')
@@ -72,7 +88,7 @@ class TestHuffman(unittest.TestCase):
         if self.verbose:
             print('test_encode')
 
-        frequency_calculator = FrequencyCalculator(self.file_list)
+        frequency_calculator = FrequencyCalculator(self.get_file_list_full_path())
 
         frequency_json = frequency_calculator.export_json_frequency()
         FileManager.write_txt(self.file_json_frequency, frequency_json)
@@ -87,9 +103,10 @@ class TestHuffman(unittest.TestCase):
         FileManager.write_txt(self.file_json_tree, json_tree)
 
         for file in self.file_list:
-            text: str = FileManager.read_txt(file)
+            text_path = f'{TestHuffman.__path_origin__}{file}.txt'
+            text: str = FileManager.read_txt(text_path)
             encode: Code = huffman.encode(text)
-            FileManager.write_bin(f'{file}.bin', encode)
+            FileManager.write_bin(f'{TestHuffman.__path_bin__}{file}.bin', encode)
             if self.verbose:
                 print(f'File: {file}')
                 print('Text Read:')
@@ -102,7 +119,7 @@ class TestHuffman(unittest.TestCase):
         if self.verbose:
             print('test_decode')
 
-        frequency_calculator = FrequencyCalculator(self.file_list)
+        frequency_calculator = FrequencyCalculator()
 
         frequency_json: str = FileManager.read_txt(self.file_json_frequency)
         frequencies: dict[str, float] = frequency_calculator.import_json_frequency(frequency_json)
@@ -110,9 +127,9 @@ class TestHuffman(unittest.TestCase):
         huffman = Huffman(frequencies)
 
         for file in self.file_list:
-            encode: Code = FileManager.read_bin(f'{file}.bin')
+            encode: Code = FileManager.read_bin(f'{TestHuffman.__path_bin__}{file}.bin')
             decode: str = huffman.decode(encode)
-            FileManager.write_txt(f'{file}.bin.txt', decode)
+            FileManager.write_txt(f'{TestHuffman.__path_decode__}{file}.txt', decode)
             if self.verbose:
                 print(f'File: {file}')
                 print(f'Code Read: {encode}')

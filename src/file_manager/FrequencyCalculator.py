@@ -13,7 +13,7 @@ class FrequencyCalculator:
     # symbols: List[tuple[str, int]] = []
     frequencies: dict[str, float]
 
-    def __init__(self, file_list: List[str]):
+    def __init__(self, file_list: List[str] = []):
         self.file_list = file_list
         self.symbols = None
         self.frequencies: dict[str, float] = {}
@@ -81,20 +81,6 @@ class FrequencyCalculator:
             value = float(s[1][1:])
             self.frequencies[key] = value
         return self.frequencies
-
-    @staticmethod
-    def symbol_to_import(s: str) -> str:
-        if s == '$double_quote$':
-            return '\"'
-        elif s == '$new_line$':
-            return '\n'
-        elif s == '$tab$':
-            return '\t'
-        elif s == '$backslash$':
-            return '\\'
-        elif s == '$colon$':
-            return ':'
-        return s
 
 
 if __name__ == '__main__':
