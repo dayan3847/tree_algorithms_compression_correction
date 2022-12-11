@@ -1,3 +1,4 @@
+from src.file_manager.SymbolMapper import SymbolMapper
 from src.huffman.Code import Code
 from src.tree import Tree, TreeObject
 
@@ -98,30 +99,10 @@ class Huffman:
         self.generate_code()
         json_codes: str = '{'
         for i in self.code_dict:
-            key = self.symbol_to_export(i)
+            key = SymbolMapper.symbol_to_export(i)
             json_codes += f'\n\t"{key}": "{str(self.code_dict[i])}",'
         json_codes = json_codes[:-1] + '\n}'
         return json_codes
-
-    @staticmethod
-    def symbol_to_export(s: str) -> str:
-        if s == '\"':
-            return '$double_quote$'
-        elif s == '\n':
-            return '$new_line$'
-        elif s == '\t':
-            return '$tab$'
-        elif s == '\\':
-            return '$backslash$'
-        return s
-
-    @staticmethod
-    def symbols_to_export(symbols: str) -> str:
-        return symbols \
-            .replace('\"', '$double_quote$') \
-            .replace('\n', '$new_line$') \
-            .replace('\t', '$tab$') \
-            .replace('\\', '$backslash$')
 
     def export_json_tree(self) -> str:
         self.generate_tree()
@@ -130,7 +111,7 @@ class Huffman:
     def __export_json_tree_recursive(self, tree: Tree, tab_count: int = 1) -> str:
         if tree is None:
             return '"None"'
-        key = self.symbols_to_export(tree.data.name)
+        key = SymbolMapper.word_to_export(tree.data.name)
 
         tab_root = '\t' * (tab_count - 1)
         tab = '\t' * tab_count

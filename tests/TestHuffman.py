@@ -93,7 +93,9 @@ class TestHuffman(unittest.TestCase):
             if self.verbose:
                 print(f'File: {file}')
                 print('Text Read:')
+                print('>>>>>>>>>>')
                 print(text)
+                print('<<<<<<<<<<')
                 print(f'Code Write: {encode}\n')
 
     def test_decode(self):
@@ -115,5 +117,7 @@ class TestHuffman(unittest.TestCase):
                 print(f'File: {file}')
                 print(f'Code Read: {encode}')
                 print('Text Write (Decoded):')
+                print('>>>>>>>>>>')
                 print(decode)
+                print('<<<<<<<<<<')
                 print()

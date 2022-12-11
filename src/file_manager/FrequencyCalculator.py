@@ -5,6 +5,8 @@ import sys
 import codecs
 from typing import List
 
+from src.file_manager.SymbolMapper import SymbolMapper
+
 
 class FrequencyCalculator:
     file_list: List[str]
@@ -57,7 +59,7 @@ class FrequencyCalculator:
         self.frequency_symbols()
         json = "{"
         for s in self.frequencies:
-            key = self.symbol_to_export(s)
+            key = SymbolMapper.symbol_to_export(s)
             json += "\n\t\"%s\": %f," % (key, self.frequencies[s])
         json = json[:-1]
         json += "\n}"
@@ -75,23 +77,10 @@ class FrequencyCalculator:
             s = s.split(':')
             key = str(s[0])
             # key = key[2:-1]
-            key = self.symbol_to_import(key)
-            value = float(s[1])
+            key = SymbolMapper.symbol_to_import(key)
+            value = float(s[1][1:])
             self.frequencies[key] = value
         return self.frequencies
-
-    @staticmethod
-    def symbol_to_export(s: str) -> str:
-        if s == '\"':
-            return '$double_quote$'
-        elif s == '\n':
-            return '$new_line$'
-        elif s == '\t':
-            return '$tab$'
-        elif s == '\\':
-            return '$backslash$'
-
-        return s
 
     @staticmethod
     def symbol_to_import(s: str) -> str:
@@ -103,6 +92,8 @@ class FrequencyCalculator:
             return '\t'
         elif s == '$backslash$':
             return '\\'
+        elif s == '$colon$':
+            return ':'
         return s
 
 
