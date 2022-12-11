@@ -1,1 +1,5 @@
 *.bin
+*.bin.txt
+*.bin.*.txt
+frequency.json
+codes.json

@@ -123,3 +123,11 @@ class Huffman:
             current_code >>= 1
 
         return decoded_text
+
+    def export_json_codes(self) -> str:
+        self.generate_code()
+        json_codes: str = '{'
+        for i in self.code_dict:
+            json_codes += f'\n\t"{i}":{str(self.code_dict[i])},'
+        json_codes = json_codes[:-1] + '\n}'
+        return json_codes
