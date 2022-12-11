@@ -18,6 +18,7 @@ class TestHuffmanDev(TestHuffman):
             # 'text_julio_cortazar_rayuela',
             # 'text_mario_vargas_llosa_pantaleon_y_las_visitadoras',
         ]
+        # self.verbose = True
 
     def test_generate(self):
         super().test_generate()

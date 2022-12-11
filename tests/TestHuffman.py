@@ -105,7 +105,15 @@ class TestHuffman(unittest.TestCase):
         for file in self.file_list:
             text_path = f'{TestHuffman.__path_origin__}{file}.txt'
             text: str = FileManager.read_txt(text_path)
+
+            print()
+            ts1 = time.time()
+            print(f'Begin: encode file "{file}"')
             encode: Code = huffman.encode(text)
+            print(f'End: encode "{file}"')
+            ts2 = time.time()
+            print(f'Time: {ts2 - ts1}\n')
+
             FileManager.write_bin(f'{TestHuffman.__path_bin__}{file}.bin', encode)
             if self.verbose:
                 print(f'File: {file}')
@@ -128,7 +136,15 @@ class TestHuffman(unittest.TestCase):
 
         for file in self.file_list:
             encode: Code = FileManager.read_bin(f'{TestHuffman.__path_bin__}{file}.bin')
+
+            print()
+            ts1 = time.time()
+            print(f'Begin: decode file "{file}"')
             decode: str = huffman.decode(encode)
+            print(f'End: decode "{file}"')
+            ts2 = time.time()
+            print(f'Time: {ts2 - ts1}\n')
+
             FileManager.write_txt(f'{TestHuffman.__path_decode__}{file}.txt', decode)
             if self.verbose:
                 print(f'File: {file}')
