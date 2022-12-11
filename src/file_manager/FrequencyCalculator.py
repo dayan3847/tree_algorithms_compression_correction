@@ -81,22 +81,22 @@ class FrequencyCalculator:
 
     @staticmethod
     def symbol_to_import(s: str) -> str:
-        if s == '$double_quote':
+        if s == '$double_quote$':
             return '\"'
-        elif s == '$new_line':
+        elif s == '$new_line$':
             return '\n'
-        elif s == '$tab':
+        elif s == '$tab$':
             return '\t'
         return s
 
     @staticmethod
     def symbol_to_export(s: str) -> str:
         if s == '\"':
-            return '$double_quote'
+            return '$double_quote$'
         elif s == '\n':
-            return '$new_line'
+            return '$new_line$'
         elif s == '\t':
-            return '$tab'
+            return '$tab$'
         return s
 
 

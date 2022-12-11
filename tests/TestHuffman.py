@@ -20,6 +20,7 @@ class TestHuffman(unittest.TestCase):
         super().setUp()
         self.file_json_frequency = f'../src/file_manager/frequency.json'
         self.file_json_codes = f'../src/file_manager/codes.json'
+        self.file_json_tree = f'../src/file_manager/tree.json'
         self.verbose = False
 
     def test_generate(self):
@@ -50,14 +51,24 @@ class TestHuffman(unittest.TestCase):
 
         if self.verbose:
             ts1 = time.time()
+            print('Begin: generate_tree')
+            huffman.generate_tree()
+            print('End: generate_tree')
+            ts2 = time.time()
+            print(f'Time: {ts2 - ts1}\n')
+
+            ts1 = time.time()
             print('Begin: generate_code')
             huffman.generate_code()
             print('End: generate_code')
             ts2 = time.time()
             print(f'Time: {ts2 - ts1}\n')
 
-        codes_json = huffman.export_json_codes()
-        FileManager.write_txt(self.file_json_codes, codes_json)
+        json_codes = huffman.export_json_codes()
+        FileManager.write_txt(self.file_json_codes, json_codes)
+
+        json_tree = huffman.export_json_tree()
+        FileManager.write_txt(self.file_json_tree, json_tree)
 
     def test_encode(self):
         if self.verbose:
@@ -73,6 +84,9 @@ class TestHuffman(unittest.TestCase):
 
         codes_json = huffman.export_json_codes()
         FileManager.write_txt(self.file_json_codes, codes_json)
+
+        json_tree = huffman.export_json_tree()
+        FileManager.write_txt(self.file_json_tree, json_tree)
 
         for file in self.file_list:
             text: str = FileManager.read_txt(file)

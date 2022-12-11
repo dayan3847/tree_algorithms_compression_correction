@@ -136,9 +136,35 @@ class Huffman:
     @staticmethod
     def symbol_to_export(s: str) -> str:
         if s == '\"':
-            return '$double_quote'
+            return '$double_quote$'
         elif s == '\n':
-            return '$new_line'
+            return '$new_line$'
         elif s == '\t':
-            return '$tab'
+            return '$tab$'
         return s
+
+    @staticmethod
+    def symbols_to_export(symbols: str) -> str:
+        return symbols.replace('\"', '$double_quote$').replace('\n', '$new_line$').replace('\t', '$tab$')
+
+    def export_json_tree(self) -> str:
+        self.generate_tree()
+        return self.__export_json_tree_recursive(self.tree)
+
+    def __export_json_tree_recursive(self, tree: Tree, tab_count: int = 1) -> str:
+        if tree is None:
+            return '"None"'
+        key = self.symbols_to_export(tree.data.name)
+
+        tab_root = '\t' * (tab_count - 1)
+        tab = '\t' * tab_count
+
+        json_tree: str = '{'
+        json_tree += f'\n{tab}"n": "{key}",'
+        json_tree += f'\n{tab}"v": {tree.data.value}'
+        if tree.left is not None:
+            json_tree += f',\n{tab}"0": {self.__export_json_tree_recursive(tree.left, tab_count + 1)},'
+        if tree.right is not None:
+            json_tree += f'\n{tab}"1": {self.__export_json_tree_recursive(tree.right, tab_count + 1)}'
+        json_tree += '\n' + tab_root + '}'
+        return json_tree
