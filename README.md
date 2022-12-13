@@ -98,3 +98,6 @@ que contiene son los siguientes:
 * **export_json_codes:** Exporta el diccionario que contiene la representación de cada símbolo en formato binario a un archivo de tipo json.
 * **export_json_tree:** Exporta el árbol a un archivo de tipo json.
 * **__export_json_tree_recursive:** Método auxiliar que apoya al método _export_json_tree_ para exportar el árbol a un archivo de tipo json.
+
+## Un ejemplo sencillo
+
