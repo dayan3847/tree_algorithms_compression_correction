@@ -99,5 +99,15 @@ que contiene son los siguientes:
 * **export_json_tree:** Exporta el árbol a un archivo de tipo json.
 * **__export_json_tree_recursive:** Método auxiliar que apoya al método _export_json_tree_ para exportar el árbol a un archivo de tipo json.
 
-## Un ejemplo sencillo
+#### Clase BinaryMatrix ####
+
+La clase BinaryMatrix es la encargada de gestionar todos los métodos necesarios para manejar las matrices utilizadas 
+en el método de Hamming para codificar una cadena de datos bianrios y detectar y corregir un error. Los métodos que 
+posee son los siguientes:
+
+* **concatenate:** Concatena dos matrices siempre que se puedan concatenar debido a sus dimensiones.
+* **transpose:** Devuelve la matriz traspuesta de una matriz que recibe por parámetros.
+* **identity:** Genera una matriz identidad del tamaño proporcionado por parámetros.
+* **consecutive:**
+* **gen_matrix_from_code:**
 
