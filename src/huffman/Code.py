@@ -69,6 +69,9 @@ class Code:
         self.length = self.length + 8 - self.length % 8
         return self
 
+    def edit_bit(self, bit_index: int):
+        self.code ^= 1 << bit_index
+
     # def concat_init(self, other: 'Code') -> 'Code':
     #     new_code_code = other.code << self.length | self.code
     #     return Code(new_code_code, self.length + other.length)
