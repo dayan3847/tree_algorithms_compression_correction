@@ -6,6 +6,7 @@ class Hamming:
     k: int = 0
     p: int = 0
     n: int = 0
+    additional_parity_bit: int = 1
     matrix_g: BinaryMatrix | None = None
     matrix_h: BinaryMatrix | None = None
     matrix_a: BinaryMatrix | None = None
@@ -18,8 +19,8 @@ class Hamming:
         matrix_r = m_code * self.matrix_g
         if verbose:
             print(code)
+            # print(self.matrix_a)
             print(self.matrix_g)
-            print(self.matrix_a)
             print(matrix_r)
         return matrix_r.to_code()
 
@@ -28,20 +29,29 @@ class Hamming:
         self.__set_n(code.length)
         self.__gen_h()
         matrix_ht = self.matrix_h.transpose()
-        # TODO inverse matrix
-        correction = m_code * matrix_ht
-        correction_code = correction.to_code(True)
-        index_of_error_bit = correction_code.code
-        clone_code = code.clone()
-        if index_of_error_bit > self.p:
-            clone_code.edit_bit(index_of_error_bit)
-        clone_code.extract(self.p)
         if verbose:
-            print(clone_code)
+            # print(self.matrix_at)
             print(self.matrix_h)
-            print(self.matrix_at)
+            print(matrix_ht)
+        correction = (m_code * matrix_ht).set_name('Correction')
+        correction_code = correction.to_code()
+        if verbose:
             print(correction)
-        return clone_code
+
+        index_of_error_bit = -1
+        if correction_code.code != 0:
+            matrix_ht_index = matrix_ht.get_row_index(correction_code)
+            if -1 != matrix_ht_index:
+                index_of_error_bit = self.n - matrix_ht_index - 1
+
+        if verbose:
+            print(f'index_of_error_bit: {index_of_error_bit}')
+
+        decoded_code = code.clone()
+        if index_of_error_bit > self.p:
+            decoded_code.edit_bit(index_of_error_bit)
+        decoded_code.extract(self.p)
+        return decoded_code
 
     def __set_k(self, k: int):
         self.k = k
@@ -49,6 +59,7 @@ class Hamming:
         self.p = 0
         while 2 ** self.p < self.k + self.p + 1:
             self.p += 1
+        self.p += self.additional_parity_bit
 
         self.n = self.k + self.p
 
@@ -70,7 +81,10 @@ class Hamming:
 
     def __gen_a(self) -> BinaryMatrix:
         if self.matrix_a is None:
-            self.matrix_a = BinaryMatrix.consecutive(self.k, self.p, 'A')
+            if 8 == self.n and 4 == self.k:
+                self.matrix_a = BinaryMatrix.identity(self.k).opposite().set_name('A')
+            else:
+                self.matrix_a = BinaryMatrix.consecutive(self.k, self.p, 'A')
 
         return self.matrix_a
 

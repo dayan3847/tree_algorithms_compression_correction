@@ -46,6 +46,24 @@ class BinaryMatrix:
     def transpose(self) -> 'BinaryMatrix':
         return BinaryMatrix(self.data.transpose(), f'-{self.name}t' if '' != self.name else '')
 
+    def opposite(self) -> 'BinaryMatrix':
+        return BinaryMatrix(self.data + 1, f'-{self.name}' if '' != self.name else '')
+
+    def get_row(self, index: int) -> 'BinaryMatrix':
+        return BinaryMatrix([self.data[index]], f'{self.name}[{index}]' if '' != self.name else '')
+
+    def get_row_count(self) -> int:
+        return len(self.data)
+
+    def get_row_index(self, code: Code) -> int:
+        row_count = len(self.data)
+        for i in range(row_count):
+            row_i = self.get_row(i)
+            code_i = row_i.to_code()
+            if code_i == code:
+                return i
+        return -1
+
     def to_code(self, revert: bool = False) -> Code:
         code_str = ''
         for row in self.data:

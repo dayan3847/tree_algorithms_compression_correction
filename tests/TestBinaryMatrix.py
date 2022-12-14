@@ -53,13 +53,16 @@ class TestBinaryMatrix(unittest.TestCase):
 
         print(result)
 
-        bit_error_index = 6
+        bit_error_index = 3
         result.data[0][bit_error_index] = (result.data[0][bit_error_index] + 1) % 2
 
         print('result with error')
         print(result)
+        print('result transpose with error')
+        result_transpose = result.transpose()
+        print(result_transpose)
 
-        correction = result * matrix_h.transpose()
+        correction = matrix_h * result_transpose
         print('correction')
         print(correction)
 
@@ -77,6 +80,15 @@ class TestBinaryMatrix(unittest.TestCase):
         m = BinaryMatrix.gen_matrix_from_code(code, True)
         print('m')
         print(m)
+
+    def test4(self):
+        identity = BinaryMatrix.identity(4)
+        print(identity)
+        identity_opposite = identity.opposite()
+        print(identity_opposite)
+        matrix_g = identity.concatenate(identity_opposite, 'G')
+        print(matrix_g)
+
 
 
 if __name__ == '__main__':
