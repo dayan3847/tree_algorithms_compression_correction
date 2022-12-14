@@ -16,6 +16,7 @@ class TestHuffmanHamming(unittest.TestCase):
     file_json_codes: str
     verbose: bool
 
+    # Direcciones donde se van a guardar los ficheros
     __path_json__ = '../txt/json/'
     __path_origin__ = '../txt/origin/'
     __path_decode__ = '../txt/decode/'
@@ -28,7 +29,7 @@ class TestHuffmanHamming(unittest.TestCase):
         self.file_json_codes = f'{TestHuffmanHamming.__path_json__}codes.json'
         self.file_json_tree = f'{TestHuffmanHamming.__path_json__}tree.json'
         self.file_list_full_path: List[str] = []
-        self.verbose = True
+        self.verbose = False
         self.file_list = ['text_hello_world']
 
     def get_file_list_full_path(self) -> List[str]:
