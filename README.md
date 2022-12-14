@@ -82,7 +82,7 @@ código. Los métodos que contiene son:
 * **concat_zero_init:** 
 * **concat_one_init:** 
 * **concat_init:** 
-* **complete_byte:** Añade bits hasta alcanzar una longitud de 8 bits en unacadena cuando no hay suficientes bits para completarla con bits de información.
+* **complete_byte:** Añade bits hasta alcanzar una longitud de 8 bits en una cadena cuando no hay suficientes bits para completarla con bits de información.
 * **get_code_from_string:** Permite obtener el código de un texto.
 
 #### Clase Huffman ####
@@ -109,5 +109,31 @@ posee son los siguientes:
 * **transpose:** Devuelve la matriz traspuesta de una matriz que recibe por parámetros.
 * **identity:** Genera una matriz identidad del tamaño proporcionado por parámetros.
 * **consecutive:**
-* **gen_matrix_from_code:**
+* **gen_matrix_from_code:** Transforma un código en formato binario a una matriz fila o columna según se requiera.
+
+#### Clase Hamming ####
+
+La clase Hamming es la encargada de gestionar todos los métodos referentes a la parte de codificar la cadena binaria
+comprimida por Huffman y luego decodificarla. En esta clase también se utiliza el algoritmo que le añade errores de 
+forma aleatoria a la cadena. Los métodos que contiene esta clase son los siguientes:
+
+* **encode:** Método encargado de multiplicar la matriz de Hamming (G) por la matriz que representa al fragmento de código.
+* **decode:** Método encargado de decodificar un fragmento de código codificado anteriormente con Hamming y tambien de identificar y localizar si hay un bit con error.
+* **__set_k:** Establece el valor de k.
+* **__set_n:** Establece el valor de n.
+* **__gen_g:** Genera la matriz G que tiene la primera parte que es una matriz identidad y luego otra parte que es la matriz A.
+* **__gen_a:** Genera la matriz A que se utiliza para completar la matriz G cumpliendo con las condiciones de que no haya dos columnas iguales y que no haya ninguna columna con todos sus valores en cero.
+* **__gen_at:** Calcula la matriz traspuesta de A.
+* **__gen_h:** Genera la matriz H que es la matriz de comprobación de pariedad necesaria para deectar errores en los bits.
+
+### Un ejemplo sencillo
+
+Suponiendo un texto de entrada pequeño se pretende recrear cómo se debe ir comportando el algoritmo paso paso, ilustrando 
+desde que se lee el fichero de texto, luego por todos los procesos que pasa hasta que finalmente se recupera el mismo 
+texto al final del proceso.
+
+Primero se lee un fichero de texto para tomar su contenido como base de todo el proceso, para este ejemplo se toma la 
+frase siguiente:
+
+**"Hello World"**
 
