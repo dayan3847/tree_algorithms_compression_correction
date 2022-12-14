@@ -57,6 +57,8 @@ class TestHuffmanHamming(unittest.TestCase):
         json_tree = huffman.export_json_tree()
         FileManager.write_txt(self.file_json_tree, json_tree)
 
+        hamming = Hamming(self.verbose)
+
         for file in self.file_list:
             text_path = f'{TestHuffmanHamming.__path_origin__}{file}.txt'
             text: str = FileManager.read_txt(text_path)
@@ -78,8 +80,7 @@ class TestHuffmanHamming(unittest.TestCase):
                 print('<<<<<<<<<<')
                 print(f'Code Write: {encode_huffman}\n')
 
-            hamming = Hamming(self.verbose)
-            encode_hamming: Code = hamming.encode(encode_huffman, 4)
+            encode_hamming: Code = hamming.encode(encode_huffman)
             FileManager.write_bin(f'{TestHuffmanHamming.__path_bin__}{file}.hamming.bin', encode_hamming)
             FileManager.write_bin(f'{TestHuffmanHamming.__path_bin__}Entrada.bin', encode_hamming)
 
@@ -98,14 +99,19 @@ class TestHuffmanHamming(unittest.TestCase):
         frequencies: dict[str, float] = frequency_calculator.import_json_frequency(frequency_json)
 
         huffman = Huffman(frequencies)
+        hamming = Hamming(self.verbose)
 
         for file in self.file_list:
-            encode: Code = FileManager.read_bin(f'{TestHuffmanHamming.__path_bin__}{file}.bin')
+            encode: Code = FileManager.read_bin(f'{TestHuffmanHamming.__path_bin__}Salida.bin')
+            hamming_decode: Code = hamming.decode(encode)
+            if hamming.report:
+                FileManager.write_txt(f'{TestHuffmanHamming.__path_bin__}ReporteCorrecciones.txt', hamming.report_text)
+            FileManager.write_bin(f'{TestHuffmanHamming.__path_bin__}{file}.corrected.bin', hamming_decode)
 
             print()
             ts1 = time.time()
             print(f'Begin: decode file "{file}"')
-            decode: str = huffman.decode(encode)
+            decode: str = huffman.decode(hamming_decode)
             print(f'End: decode "{file}"')
             ts2 = time.time()
             print(f'Time: {ts2 - ts1}\n')
@@ -119,3 +125,8 @@ class TestHuffmanHamming(unittest.TestCase):
                 print(decode)
                 print('<<<<<<<<<<')
                 print()
+
+    def test_complete(self):
+        self.test_encode()
+        self.test_generate_errors()
+        self.test_decode()
