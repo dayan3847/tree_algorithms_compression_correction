@@ -1,0 +1,4 @@
+*
+!.gitignore
+!injectError.c
+!script_generate_errors.sh

@@ -1,5 +1,5 @@
+from src.file_manager.SymbolMapper import SymbolMapper
 from src.huffman.Code import Code
-from src.huffman.Encode import Encode
 from src.tree import Tree, TreeObject
 
 
@@ -66,46 +66,17 @@ class Huffman:
         if tree.right is not None:
             self.__generate_code_recursive(tree.right, code.concat_one_init())
 
-    def encode(self, text: str) -> Encode:
-        self.generate_code()
-
-        encoded: Encode = Encode()
-
-        for i in text:
-            new_code: Code = self.code_dict[i]
-            encoded.add_code(new_code)
-        return encoded
-
-    def decode(self, encode: Encode) -> str:
-        self.generate_tree()
-        decoded_text: str = ''
-        current_node: Tree = self.tree
-        for code in reversed(encode.codes):
-            current_code: int = code.code
-            for _ in range(code.length):
-                if current_code & 1:
-                    current_node = current_node.right
-                else:
-                    current_node = current_node.left
-
-                if current_node.left is None and current_node.right is None:
-                    decoded_text += current_node.data.name
-                    current_node = self.tree
-
-                current_code >>= 1
-
-        return decoded_text
-
-    def encode_one_code(self, text: str) -> Code:
+    def encode(self, text: str) -> Code:
         self.generate_code()
         encoded: Code = Code()
         for i in text:
             new_code: Code = self.code_dict[i]
             encoded.concat_init(new_code)
             # encoded = encoded.concat(new_code)
-        return encoded
 
-    def decode_one_code(self, code: Code) -> str:
+        return encoded.complete_byte()
+
+    def decode(self, code: Code) -> str:
         self.generate_tree()
         decoded_text: str = ''
         current_node: Tree = self.tree
@@ -123,3 +94,34 @@ class Huffman:
             current_code >>= 1
 
         return decoded_text
+
+    def export_json_codes(self) -> str:
+        self.generate_code()
+        json_codes: str = '{'
+        for i in self.code_dict:
+            key = SymbolMapper.symbol_to_export(i)
+            json_codes += f'\n\t"{key}": "{str(self.code_dict[i])}",'
+        json_codes = json_codes[:-1] + '\n}'
+        return json_codes
+
+    def export_json_tree(self) -> str:
+        self.generate_tree()
+        return self.__export_json_tree_recursive(self.tree)
+
+    def __export_json_tree_recursive(self, tree: Tree, tab_count: int = 1) -> str:
+        if tree is None:
+            return '"None"'
+        key = SymbolMapper.word_to_export(tree.data.name)
+
+        tab_root = '\t' * (tab_count - 1)
+        tab = '\t' * tab_count
+
+        json_tree: str = '{'
+        json_tree += f'\n{tab}"n": "{key}",'
+        json_tree += f'\n{tab}"v": {tree.data.value}'
+        if tree.left is not None:
+            json_tree += f',\n{tab}"0": {self.__export_json_tree_recursive(tree.left, tab_count + 1)},'
+        if tree.right is not None:
+            json_tree += f'\n{tab}"1": {self.__export_json_tree_recursive(tree.right, tab_count + 1)}'
+        json_tree += '\n' + tab_root + '}'
+        return json_tree

@@ -63,6 +63,18 @@ class Code:
         self.length += other.length
         return self
 
+    def complete_byte(self) -> 'Code':
+        if self.length % 8 == 0:
+            return self
+        self.length = self.length + 8 - self.length % 8
+        return self
+
+    def edit_bit(self, bit_index: int):
+        self.code ^= 1 << bit_index
+
+    def __eq__(self, other: 'Code') -> bool:
+        return self.code == other.code and self.length == other.length
+
     # def concat_init(self, other: 'Code') -> 'Code':
     #     new_code_code = other.code << self.length | self.code
     #     return Code(new_code_code, self.length + other.length)

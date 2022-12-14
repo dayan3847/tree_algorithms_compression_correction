@@ -5,15 +5,22 @@ import sys
 import codecs
 from typing import List
 
+from src.file_manager.SymbolMapper import SymbolMapper
+
 
 class FrequencyCalculator:
     file_list: List[str]
+    # symbols: List[tuple[str, int]] = []
+    frequencies: dict[str, float]
 
-    def __init__(self, file_list: List[str]):
+    def __init__(self, file_list: List[str] = []):
         self.file_list = file_list
         self.symbols = None
+        self.frequencies: dict[str, float] = {}
 
     def count_symbols(self):
+        if self.symbols is not None and len(self.symbols) > 0:
+            return self.symbols
         letras = {}
         for fileName in self.file_list:
             archivo = codecs.open(fileName, encoding='utf-8-sig')
@@ -28,24 +35,52 @@ class FrequencyCalculator:
         return self.symbols
 
     def frequency_symbols(self, verbose: bool = False) -> dict[str, float]:
-        if self.symbols is None:
-            self.count_symbols()
-        frequencies: dict[str, float] = {}
+        if len(self.frequencies) > 0:
+            return self.frequencies
+        self.count_symbols()
+        self.frequencies: dict[str, float] = {}
         count = 0
         for s in self.symbols:
             count += s[1]
         for s in self.symbols:
-            frequencies[str(s[0])] = float(s[1] / count)
+            self.frequencies[str(s[0])] = float(s[1] / count)
 
         if verbose:
             print("Se encontraron %d simbolos diferentes.\n" % (len(self.symbols)))
-            for s in frequencies:
+            for s in self.frequencies:
                 if ord(s) == 10:
-                    print("'\\n',%d,%f" % (ord(s), frequencies[s]))
+                    print("'\\n',%d,%f" % (ord(s), self.frequencies[s]))
                 else:
-                    print("'%c',%d,%f" % (s, ord(s), frequencies[s]))
+                    print("'%c',%d,%f" % (s, ord(s), self.frequencies[s]))
 
-        return frequencies
+        return self.frequencies
+
+    def export_json_frequency(self) -> str:
+        self.frequency_symbols()
+        json = "{"
+        for s in self.frequencies:
+            key = SymbolMapper.symbol_to_export(s)
+            json += "\n\t\"%s\": %f," % (key, self.frequencies[s])
+        json = json[:-1]
+        json += "\n}"
+
+        return json
+
+    def import_json_frequency(self, json: str) -> dict[str, float]:
+        self.frequencies: dict[str, float] = {}
+        json = json[1:-1]
+        json = json.replace("\n", "")
+        json = json.replace("\t", "")
+        json = json.replace("\"", "")
+        json = json.replace("\\", "")
+        for s in json.split(','):
+            s = s.split(':')
+            key = str(s[0])
+            # key = key[2:-1]
+            key = SymbolMapper.symbol_to_import(key)
+            value = float(s[1][1:])
+            self.frequencies[key] = value
+        return self.frequencies
 
 
 if __name__ == '__main__':

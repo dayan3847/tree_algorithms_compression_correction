@@ -1,6 +1,4 @@
 from tests.TestFile import TestFile
 from tests.TestFrequencyCalculator import TestHuffmanInTextFiles
 from tests.TestHuffman import TestHuffman
-from tests.TestHuffmanInTextFilesHelloWorld import TestHuffmanInTextFiles
-from tests.TestHuffmanInTextFilesVerbose import TestHuffmanInTextFiles
 from tests.TestTree import TestTree

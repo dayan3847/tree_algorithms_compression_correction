@@ -3,7 +3,6 @@ import unittest
 from src.tree.Tree import Tree
 from src.tree.TreeObject import TreeObject
 from src.huffman.Code import Code
-from src.huffman.Encode import Encode
 from src.huffman.Huffman import Huffman
 
 
@@ -67,7 +66,7 @@ class TestTree(unittest.TestCase):
 
         # text: str = 'B'
         text: str = 'ACABADA'
-        encoded: Encode = huffman.encode(text)
+        encoded: Code = huffman.encode(text)
         encoded_string: str = str(encoded)
         print(f'Encoded "{text}": {encoded_string}')
         for code in encoded.codes:
@@ -91,20 +90,18 @@ class TestTree(unittest.TestCase):
 
         # text = 'B'
         text: str = 'ACABADA'
-        encoded: Encode = huffman.encode(text)
+        encoded: Code = huffman.encode(text)
         encoded_string: str = str(encoded)
         print(f'Encoded "{text}": {encoded_string}')
-        for code in encoded.codes:
-            print(f'Base10: {code.code}, Length: {code.length}')
 
         decoded_text: str = huffman.decode(encoded)
         print(f'Decoded "{encoded_string}": {decoded_text}')
 
-        encoded2: Code = huffman.encode_one_code(text)
+        encoded2: Code = huffman.encode(text)
         encoded_string2: str = str(encoded2)
         print(f'Encoded2 "{text}": {encoded_string2}, Base10: {encoded2.code}, Length: {encoded2.length}')
 
-        decoded_text2: str = huffman.decode_one_code(encoded2)
+        decoded_text2: str = huffman.decode(encoded2)
         print(f'Decoded "{encoded_string2}": {decoded_text2}')
 
         self.assertEqual(encoded_string, encoded_string2)

@@ -1,10 +1,15 @@
 import codecs
 
 from src.huffman.Code import Code
-from src.huffman.Encode import Encode
 
 
 class FileManager:
+
+    @staticmethod
+    def write_txt(file_name: str, text: str):
+        file = codecs.open(file_name, 'w', encoding='utf-8-sig')
+        file.write(text)
+        file.close()
 
     @staticmethod
     def read_txt(file_name: str) -> str:
@@ -18,7 +23,7 @@ class FileManager:
         return text
 
     @staticmethod
-    def write_bin(file_name: str, encode: Encode):
+    def write_bin(file_name: str, encode: Code):
 
         # TODO: try use encode directly
         text: str = str(encode)
@@ -34,28 +39,16 @@ class FileManager:
             f.write(buffer)
 
     @staticmethod
-    def read_bin(file_name: str) -> Encode:
-
+    def read_bin(file_name: str) -> Code:
         with open(file_name, 'br') as f:
             data = f.read()
             # now convert the data to int array
             int_array = [int.from_bytes(bytes([x]), byteorder='big') for x in data]
             # now convert the data to a string
             # s2 = ''.join(format(x, '08b') for x in data)
-
-        # TODO try use encode directly
         # code = Code.get_code_from_string(s2)
-        encode = Encode()
-
-        # for int array in reverse order
+        code: Code = Code()
         for i in reversed(int_array):
-            code = Code(i, 8)
-            encode.add_code(code)
+            code = code.concat_init(Code(i, 8))
 
-        return encode
-
-    @staticmethod
-    def write_txt(file_name: str, text: str):
-        file = codecs.open(file_name, 'w', encoding='utf-8-sig')
-        file.write(text)
-        file.close()
+        return code
