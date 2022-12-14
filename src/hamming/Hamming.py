@@ -11,31 +11,36 @@ class Hamming:
     matrix_h: BinaryMatrix | None = None
     matrix_a: BinaryMatrix | None = None
     matrix_at: BinaryMatrix | None = None
+    verbose: bool
+    report = True
 
-    def encode(self, code: Code, verbose: bool = False) -> Code:
+    def __init__(self, verbose: bool = False):
+        self.verbose = verbose
+
+    def encode(self, code: Code) -> Code:
+        if self.verbose:
+            print(f'Encoding code: {code}')
         m_code = BinaryMatrix.gen_matrix_from_code(code)
         self.__set_k(code.length)
         self.__gen_g()
-        matrix_r = m_code * self.matrix_g
-        if verbose:
-            print(code)
-            # print(self.matrix_a)
-            print(self.matrix_g)
-            print(matrix_r)
-        return matrix_r.to_code()
+        matrix_r = (m_code * self.matrix_g).set_name('R')
+        encode = matrix_r.to_code()
+        if self.verbose:
+            print(f'encode: {encode}')
+        return encode
 
-    def decode(self, code: Code, verbose: bool = False) -> Code:
+    def decode(self, code: Code) -> Code:
+        if self.verbose:
+            print(f'Decoding code: {code}')
         m_code = BinaryMatrix.gen_matrix_from_code(code)
         self.__set_n(code.length)
         self.__gen_h()
         matrix_ht = self.matrix_h.transpose()
-        if verbose:
-            # print(self.matrix_at)
-            print(self.matrix_h)
+        if self.verbose:
             print(matrix_ht)
         correction = (m_code * matrix_ht).set_name('Correction')
         correction_code = correction.to_code()
-        if verbose:
+        if self.verbose:
             print(correction)
 
         index_of_error_bit = -1
@@ -44,11 +49,11 @@ class Hamming:
             if -1 != matrix_ht_index:
                 index_of_error_bit = self.n - matrix_ht_index - 1
 
-        if verbose:
+        if self.verbose:
             print(f'index_of_error_bit: {index_of_error_bit}')
 
         decoded_code = code.clone()
-        if index_of_error_bit > self.p:
+        if index_of_error_bit >= self.p:
             decoded_code.edit_bit(index_of_error_bit)
         decoded_code.extract(self.p)
         return decoded_code
@@ -77,6 +82,9 @@ class Hamming:
             k_identity = BinaryMatrix.identity(self.k)
             self.__gen_a()
             self.matrix_g = k_identity.concatenate(self.matrix_a, 'G')
+            if self.verbose:
+                # print(self.matrix_a)
+                print(self.matrix_g)
         return self.matrix_g
 
     def __gen_a(self) -> BinaryMatrix:
@@ -99,4 +107,7 @@ class Hamming:
             self.__gen_at()
             p_identity = BinaryMatrix.identity(self.p)
             self.matrix_h = self.matrix_at.concatenate(p_identity, 'H')
+            if self.verbose:
+                # print(self.matrix_at)
+                print(self.matrix_h)
         return self.matrix_h
