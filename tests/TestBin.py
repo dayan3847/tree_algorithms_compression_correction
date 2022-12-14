@@ -6,6 +6,15 @@ from src.huffman.Code import Code
 
 class TestBin(unittest.TestCase):
 
+    def test_concat(self):
+        c1 = Code.get_code_from_string('1001')
+        print()
+        print(f'c1: {c1}')
+        c2 = Code.get_code_from_string('1010')
+        print(f'c2: {c2}')
+        c3 = c1.concat_init(c2)
+        print(f'c3: {c3}')
+
     def test_bin1(self):
         code1: Code = Code(8, 5)
         code1.concat_init(Code(3, 11))
