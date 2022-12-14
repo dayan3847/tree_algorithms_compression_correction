@@ -44,15 +44,14 @@ class TestHuffmanHamming(unittest.TestCase):
             print('test_encode')
 
         frequency_calculator = FrequencyCalculator(self.get_file_list_full_path())
-
-        frequency_json = frequency_calculator.export_json_frequency()
-        FileManager.write_txt(self.file_json_frequency, frequency_json)
-
+        json_frequency = frequency_calculator.export_json_frequency()
+        FileManager.write_txt(self.file_json_frequency, json_frequency)
         frequencies = frequency_calculator.frequency_symbols()
+
         huffman = Huffman(frequencies)
 
-        codes_json = huffman.export_json_codes()
-        FileManager.write_txt(self.file_json_codes, codes_json)
+        json_codes = huffman.export_json_codes()
+        FileManager.write_txt(self.file_json_codes, json_codes)
 
         json_tree = huffman.export_json_tree()
         FileManager.write_txt(self.file_json_tree, json_tree)
@@ -65,13 +64,19 @@ class TestHuffmanHamming(unittest.TestCase):
 
             print()
             ts1 = time.time()
-            print(f'Begin: encode file "{file}"')
+            if self.verbose:
+                print(f'Begin: encode file "{file}"')
+
             encode_huffman: Code = huffman.encode(text)
-            print(f'End: encode "{file}"')
+
+            if self.verbose:
+                print(f'End: encode "{file}"')
             ts2 = time.time()
-            print(f'Time: {ts2 - ts1}\n')
+            if self.verbose:
+                print(f'Time: {ts2 - ts1}\n')
 
             FileManager.write_bin(f'{TestHuffmanHamming.__path_bin__}{file}.huffman.bin', encode_huffman)
+
             if self.verbose:
                 print(f'File: {file}')
                 print('Text Read:')
@@ -81,7 +86,9 @@ class TestHuffmanHamming(unittest.TestCase):
                 print(f'Code Write: {encode_huffman}\n')
 
             encode_hamming: Code = hamming.encode(encode_huffman)
+
             FileManager.write_bin(f'{TestHuffmanHamming.__path_bin__}{file}.hamming.bin', encode_hamming)
+
             FileManager.write_bin(f'{TestHuffmanHamming.__path_bin__}Entrada.bin', encode_hamming)
 
     def test_generate_errors(self):
@@ -94,7 +101,6 @@ class TestHuffmanHamming(unittest.TestCase):
             print('test_decode')
 
         frequency_calculator = FrequencyCalculator()
-
         frequency_json: str = FileManager.read_txt(self.file_json_frequency)
         frequencies: dict[str, float] = frequency_calculator.import_json_frequency(frequency_json)
 
@@ -103,7 +109,9 @@ class TestHuffmanHamming(unittest.TestCase):
 
         for file in self.file_list:
             encode: Code = FileManager.read_bin(f'{TestHuffmanHamming.__path_bin__}Salida.bin')
+
             hamming_decode: Code = hamming.decode(encode)
+
             if hamming.report:
                 FileManager.write_txt(f'{TestHuffmanHamming.__path_bin__}ReporteCorrecciones.txt', hamming.report_text)
             FileManager.write_bin(f'{TestHuffmanHamming.__path_bin__}{file}.corrected.bin', hamming_decode)

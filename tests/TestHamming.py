@@ -6,8 +6,9 @@ from src.huffman import Code
 
 class TestHamming(unittest.TestCase):
     def test_encode(self):
-        hamming = Hamming()
-        code = Code(1, 4)
+        hamming = Hamming(True)
+        code = Code.get_code_from_string('0100')
+        # code = Code(1, 4)
         print('code')
         print(code)
         encode = hamming.encode_one(code)
@@ -15,9 +16,8 @@ class TestHamming(unittest.TestCase):
         print(encode)
 
     def test_decode(self):
-        hamming = Hamming()
-        code = Code.get_code_from_string('0001100')
-        code = Code.get_code_from_string('0001101')
+        hamming = Hamming(True)
+        code = Code.get_code_from_string('01101011')
         print('code')
         print(code)
         decode = hamming.decode_one(code)

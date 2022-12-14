@@ -30,7 +30,7 @@ class Hamming:
     def decode(self, code: Code, n: int = 8) -> Code:
         decode = Code()
         cloned_code = code.clone()
-        code_number = int(code.length / 8 - 1)
+        code_number = int(code.length / n - 1)
         while cloned_code.length > 0:
             n_code: Code = cloned_code.extract(n)
             k_code: Code = self.decode_one(n_code, code_number)
@@ -45,7 +45,7 @@ class Hamming:
         self.__set_k(code.length)
         self.__gen_g()
         matrix_r = (m_code * self.matrix_g).set_name('R')
-        encode = matrix_r.to_code()
+        encode: Code = matrix_r.to_code()
         if self.verbose:
             print(f'encode: {encode}')
         return encode
@@ -117,6 +117,7 @@ class Hamming:
             if 8 == self.n and 4 == self.k:
                 self.matrix_a = BinaryMatrix.identity(self.k).opposite().set_name('A')
             else:
+                # TODO check it.
                 self.matrix_a = BinaryMatrix.consecutive(self.k, self.p, 'A')
 
         return self.matrix_a
