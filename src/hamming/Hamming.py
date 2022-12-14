@@ -9,6 +9,7 @@ class Hamming:
     additional_parity_bit: int = 1
     matrix_g: BinaryMatrix | None = None
     matrix_h: BinaryMatrix | None = None
+    matrix_ht: BinaryMatrix | None = None
     matrix_a: BinaryMatrix | None = None
     matrix_at: BinaryMatrix | None = None
     verbose: bool
@@ -51,22 +52,19 @@ class Hamming:
         return encode
 
     def decode_one(self, code: Code, code_number: int = -1) -> Code:
-        if self.verbose:
-            print(f'Decoding code: {code}')
         m_code = BinaryMatrix.gen_matrix_from_code(code)
         self.__set_n(code.length)
-        self.__gen_h()
-        matrix_ht = self.matrix_h.transpose()
+        self.__gen_ht()
         if self.verbose:
-            print(matrix_ht)
-        correction = (m_code * matrix_ht).set_name('Correction')
+            print(f'Decoding code: {code}')
+        correction = (m_code * self.matrix_ht).set_name('Correction')
         correction_code = correction.to_code()
         if self.verbose:
             print(correction)
 
         index_of_error_bit = -1
         if correction_code.code != 0:
-            matrix_ht_index = matrix_ht.get_row_index(correction_code)
+            matrix_ht_index = self.matrix_ht.get_row_index(correction_code)
             if -1 != matrix_ht_index:
                 index_of_error_bit = self.n - matrix_ht_index - 1
                 if self.report:
@@ -74,7 +72,7 @@ class Hamming:
                                        f' {index_of_error_bit} del byte {code_number}\n' \
                                        f'{self.report_text}'
 
-        if self.verbose:
+        if self.verbose and index_of_error_bit != -1:
             print(f'index_of_error_bit: {index_of_error_bit}')
 
         decoded_code = code.clone()
@@ -137,3 +135,11 @@ class Hamming:
                 # print(self.matrix_at)
                 print(self.matrix_h)
         return self.matrix_h
+
+    def __gen_ht(self) -> BinaryMatrix:
+        if self.matrix_ht is None:
+            self.__gen_h()
+            self.matrix_ht = self.matrix_h.transpose()
+            if self.verbose:
+                print(self.matrix_ht)
+        return self.matrix_ht
