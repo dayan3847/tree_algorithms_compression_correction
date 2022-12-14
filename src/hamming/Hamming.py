@@ -70,8 +70,9 @@ class Hamming:
             if -1 != matrix_ht_index:
                 index_of_error_bit = self.n - matrix_ht_index - 1
                 if self.report:
-                    self.report_text += 'Se ha corregido un error en el bit:' \
-                                        f' {index_of_error_bit} del byte {code_number}\n'
+                    self.report_text = 'Se ha corregido un error en el bit:' \
+                                       f' {index_of_error_bit} del byte {code_number}\n' \
+                                       f'{self.report_text}'
 
         if self.verbose:
             print(f'index_of_error_bit: {index_of_error_bit}')
