@@ -10,7 +10,7 @@ class TestHamming(unittest.TestCase):
         code = Code(1, 4)
         print('code')
         print(code)
-        encode = hamming.encode(code)
+        encode = hamming.encode_one(code)
         print('encode')
         print(encode)
 
@@ -20,7 +20,7 @@ class TestHamming(unittest.TestCase):
         code = Code.get_code_from_string('0001101')
         print('code')
         print(code)
-        decode = hamming.decode(code)
+        decode = hamming.decode_one(code)
         print('decode')
         print(decode)
 
@@ -28,7 +28,7 @@ class TestHamming(unittest.TestCase):
         print()
         hamming_encode = Hamming(True)
         code = Code(1, 4)
-        encode = hamming_encode.encode(code)
+        encode = hamming_encode.encode_one(code)
         print('encode')
         print(encode)
 
@@ -37,7 +37,7 @@ class TestHamming(unittest.TestCase):
         encode.edit_bit(4)
         print('encode with error')
         print(encode)
-        decode = hamming_decode.decode(encode)
+        decode = hamming_decode.decode_one(encode)
         print('decode')
         print(decode)
 

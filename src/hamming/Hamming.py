@@ -12,12 +12,33 @@ class Hamming:
     matrix_a: BinaryMatrix | None = None
     matrix_at: BinaryMatrix | None = None
     verbose: bool
-    report = True
+    report: bool = True
+    report_text: str = ''
 
     def __init__(self, verbose: bool = False):
         self.verbose = verbose
 
-    def encode(self, code: Code) -> Code:
+    def encode(self, code: Code, k: int = 4) -> Code:
+        encode = Code()
+        cloned_code = code.clone()
+        while cloned_code.length > 0:
+            k_code: Code = cloned_code.extract(k)
+            n_code: Code = self.encode_one(k_code)
+            encode.concat_init(n_code)
+        return encode
+
+    def decode(self, code: Code, n: int = 8) -> Code:
+        decode = Code()
+        cloned_code = code.clone()
+        code_number = int(code.length / 8 - 1)
+        while cloned_code.length > 0:
+            n_code: Code = cloned_code.extract(n)
+            k_code: Code = self.decode_one(n_code, code_number)
+            decode.concat_init(k_code)
+            code_number -= 1
+        return decode
+
+    def encode_one(self, code: Code) -> Code:
         if self.verbose:
             print(f'Encoding code: {code}')
         m_code = BinaryMatrix.gen_matrix_from_code(code)
@@ -29,7 +50,7 @@ class Hamming:
             print(f'encode: {encode}')
         return encode
 
-    def decode(self, code: Code) -> Code:
+    def decode_one(self, code: Code, code_number: int = -1) -> Code:
         if self.verbose:
             print(f'Decoding code: {code}')
         m_code = BinaryMatrix.gen_matrix_from_code(code)
@@ -48,6 +69,9 @@ class Hamming:
             matrix_ht_index = matrix_ht.get_row_index(correction_code)
             if -1 != matrix_ht_index:
                 index_of_error_bit = self.n - matrix_ht_index - 1
+                if self.report:
+                    self.report_text += 'Se ha corregido un error en el bit:' \
+                                        f' {index_of_error_bit} del byte {code_number}\n'
 
         if self.verbose:
             print(f'index_of_error_bit: {index_of_error_bit}')
