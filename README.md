@@ -137,3 +137,134 @@ frase siguiente:
 
 **"Hello World"**
 
+Este texto se toma y se analiza para obtner la frecuencia con que aparece cada caracter y se obtiene la información 
+siguiente:
+
+```python
+{
+	"l": 0.272727,
+	"o": 0.181818,
+	"h": 0.090909,
+	"e": 0.090909,
+	" ": 0.090909,
+	"w": 0.090909,
+	"r": 0.090909,
+	"d": 0.090909
+}
+```
+
+Utilizando estas frecuencias se construye el árbol que permite codificar cada caracter en una cadena de números binarios 
+y viceversa. Para efectos del ejemplo el caracter que es un espacio en blanco se representó con un guión bajo. El árbol 
+quedaría de la siguiente manera:
+
+<img alt="img.png" src="doc/tree_helloworld_example.png" width="70%"/>
+
+En un archivo json se vería de la siguiente manera:
+
+```python
+{
+	"n": " dehlorw",
+	"v": 1.0,
+	"0": {
+		"n": " drw",
+		"v": 0.36363636363636365,
+		"0": {
+			"n": " w",
+			"v": 0.18181818181818182,
+			"0": {
+				"n": " ",
+				"v": 0.09090909090909091
+			},
+			"1": {
+				"n": "w",
+				"v": 0.09090909090909091
+			}
+		},
+		"1": {
+			"n": "dr",
+			"v": 0.18181818181818182,
+			"0": {
+				"n": "r",
+				"v": 0.09090909090909091
+			},
+			"1": {
+				"n": "d",
+				"v": 0.09090909090909091
+			}
+		}
+	},
+	"1": {
+		"n": "ehlo",
+		"v": 0.6363636363636364,
+		"0": {
+			"n": "l",
+			"v": 0.2727272727272727
+		},
+		"1": {
+			"n": "eho",
+			"v": 0.36363636363636365,
+			"0": {
+				"n": "o",
+				"v": 0.18181818181818182
+			},
+			"1": {
+				"n": "eh",
+				"v": 0.18181818181818182,
+				"0": {
+					"n": "h",
+					"v": 0.09090909090909091
+				},
+				"1": {
+					"n": "e",
+					"v": 0.09090909090909091
+				}
+			}
+		}
+	}
+}
+```
+
+Utilizando este árbol se pueden definir las representaciones en binario de cada uno de los caracteres de la siguiente
+manera:
+
+```python
+{
+	" ": "000",
+	"w": "100",
+	"r": "010",
+	"d": "110",
+	"l": "01",
+	"o": "011",
+	"h": "0111",
+	"e": "1111"
+}
+```
+
+Con estas representaciones en binario de cada uno de los caracteres se puede entonces traducir el texto "hello world" 
+en la sigiuente serie de ceros y unos: 
+
+```python
+{
+	"hello world": "11001010011100000011010111110111",
+}
+```
+
+De esta forma queda comprimido el archivo de texto a una forma binaria lista para ser codificada por el algoritmo de 
+Hamming. Para poder comenzar con Hamming es necesario dividir esta cadena en pequeñas cadenas de 4 bits, y si la cadena 
+final queda incompleta entonces la completamos con ceros a la izquierda. Quedando de la siguiente manera:
+
+```python
+{
+	"1": "000",
+	"2": "100",
+	"3": "010",
+	"4": "110",
+	"5": "01",
+	"6": "011",
+	"7": "0111",
+	"8": "1111"
+    
+    11001010011100000011010111110111
+}
+```
+
