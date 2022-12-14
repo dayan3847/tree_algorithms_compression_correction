@@ -17,7 +17,16 @@ class Hamming:
     def __init__(self, verbose: bool = False):
         self.verbose = verbose
 
-    def encode(self, code: Code) -> Code:
+    def encode(self, code: Code, k: int) -> Code:
+        encode = Code()
+        cloned_code = code.clone()
+        while cloned_code.length > 0:
+            k_code: Code = cloned_code.extract(k)
+            n_code: Code = self.encode_one(k_code)
+            encode.concat_init(n_code)
+        return encode
+
+    def encode_one(self, code: Code) -> Code:
         if self.verbose:
             print(f'Encoding code: {code}')
         m_code = BinaryMatrix.gen_matrix_from_code(code)
@@ -29,7 +38,7 @@ class Hamming:
             print(f'encode: {encode}')
         return encode
 
-    def decode(self, code: Code) -> Code:
+    def decode_one(self, code: Code) -> Code:
         if self.verbose:
             print(f'Decoding code: {code}')
         m_code = BinaryMatrix.gen_matrix_from_code(code)
