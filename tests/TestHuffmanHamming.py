@@ -28,7 +28,7 @@ class TestHuffmanHamming(unittest.TestCase):
         self.file_json_codes = f'{TestHuffmanHamming.__path_json__}codes.json'
         self.file_json_tree = f'{TestHuffmanHamming.__path_json__}tree.json'
         self.file_list_full_path: List[str] = []
-        self.verbose = False
+        self.verbose = True
         self.file_list = ['text_hello_world']
 
     def get_file_list_full_path(self) -> List[str]:
